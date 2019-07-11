@@ -1,0 +1,159 @@
+﻿@model e_commerce_project.ViewModel.Account.RegisterViewModel
+@{
+	ViewData["Title"] = "Profile";
+}
+<link rel="stylesheet" href="~/css/registerandLogin.css">
+<div class="container mt-4 pb-5" id="register__form">
+	<!-- Table -->
+	<div class="row justify-content-center">
+		<div class="col-lg-6 col-md-8">
+			<div class="card bg-secondary shadow border-0">
+				<div class="card-header bg-transparent pb-5">
+					<div class="text-muted text-center mt-2 mb-4"><small>Зарегистрируйтесь через:</small></div>
+					<div class="text-center">
+						<a href="#" class="btn btn-neutral btn-icon mr-4">
+							<span class="btn-inner--icon"><img src="https://raw.githack.com/creativetimofficial/argon-dashboard/master/assets/img/icons/common/github.svg"></span>
+							<span class="btn-inner--text">Github</span>
+						</a>
+						<a href="#" class="btn btn-neutral btn-icon">
+							<span class="btn-inner--icon"><img src="https://raw.githack.com/creativetimofficial/argon-dashboard/master/assets/img/icons/common/google.svg"></span>
+							<span class="btn-inner--text">Google</span>
+						</a>
+					</div>
+				</div>
+				<div class="card-body px-lg-5 py-lg-5">
+					<div class="text-center text-muted mb-4">
+						<small>Или зарегистрируйтесь вручную</small>
+					</div>
+					<form method="post" role="form">
+						<div asp-validation-summary="ModelOnly" class="text-warning pb-3 ml-2"></div>
+						<div class="form-group">
+							<div class="input-group input-group-alternative mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-envelope"></i></span>
+								</div>
+								<input asp-for="Email" v-model="Email" class="form-control" placeholder="Email" type="email">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group input-group-alternative mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-user"></i></span>
+								</div>
+								<input asp-for="FirstName" v-model="Name" class="form-control" placeholder="Имя" type="text">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="input-group input-group-alternative">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-key"></i></span>
+								</div>
+								<input asp-for="Password" v-model="Password" class="form-control" placeholder="Пароль" type="password">
+							</div>
+						</div>
+						<div class="text-muted font-italic"><small>Надежность пароля: <span v-bind:class="PasswordSecurtySpanText" class=" font-weight-700">{{ PasswordSecurityText  }}</span></small></div>
+						<div class="row my-4">
+							<div class="col-12">
+								<div class="custom-control custom-control-alternative custom-checkbox">
+									<input v-model="PolicyAccept" class="custom-control-input" id="customCheckRegister" type="checkbox">
+									<label class="custom-control-label" for="customCheckRegister">
+										<span class="text-muted">Я согласен с <a href="#!">Условия соглашения</a></span>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary mt-4" v-bind:disabled="!BtnEnable">Создать аккаунт</button>
+								</div>
+							</div>
+							<div class="col-12">
+								<div class="text-center">
+									<a asp-action="Auth" asp-controller="Account">Зарегистрированы?</a>
+								</div>
+							</div>
+						</div>
+						<div class="text-center">
+
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts{
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+	<script type="text/javascript">
+		var register = new Vue({
+			el: '#register__form',
+			data: {
+				Name: '',
+				Email: '',
+				Password: '',
+
+				PasswordSecurity: ['ненадежный', 'слабый', 'надежный'],
+				PasswordSecurityText: '',
+
+				PasswordSecurtySpan: ['text-danger', 'text-info', 'text-success'],
+				PasswordSecurtySpanText: '',
+
+				BtnEnable: false,
+				PolicyAccept: false
+			},
+			mounted() {
+				this.PasswordSecurityText = this.PasswordSecurity[0];
+				this.PasswordSecurtySpanText = this.PasswordSecurtySpan[0];
+				console.log(this.PasswordSecurtySpanText);
+			},
+			watch: {
+				Password: function () {
+
+					var symbol = ['!', '%', '#', '$', '^', '&', '*', '.'];
+					var symbolIsFind = false;
+					for (var i = 0; i < symbol.length; i++) {
+						if (this.Password.indexOf(symbol[i]) !== -1 && this.Password.length > 5) {
+
+							this.PasswordSecurityText = this.PasswordSecurity[2];
+							this.PasswordSecurtySpanText = this.PasswordSecurtySpan[2];
+							symbolIsFind = true;
+							if (this.PolicyAccept) {
+								this.BtnEnable = true;
+							}
+							break;
+						}
+						else if (i == (symbol.length - 1)) {
+							this.BtnEnable = false;
+							this.PasswordSecurityText = this.PasswordSecurity[0];
+							this.PasswordSecurtySpanText = this.PasswordSecurtySpan[0];
+						}
+					}
+					if (this.Password.length > 5 && !symbolIsFind) {
+						this.PasswordSecurityText = this.PasswordSecurity[1];
+						this.PasswordSecurtySpanText = this.PasswordSecurtySpan[1];
+						if (this.PolicyAccept) {
+							this.BtnEnable = true;
+						}
+					}
+					else if (this.Password.length < 6) {
+						this.PasswordSecurityText = this.PasswordSecurity[0];
+						this.PasswordSecurtySpanText = this.PasswordSecurtySpan[0];
+						this.BtnEnable = false;
+					}
+
+				},
+				PolicyAccept: function () {
+					if (this.Password.length > 5 && this.PolicyAccept) {
+						this.BtnEnable = true;
+					}
+					else if (!this.PolicyAccept) {
+						this.BtnEnable = false;
+					}
+				}
+			}
+		});
+	</script>
+}
+

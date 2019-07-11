@@ -1,0 +1,295 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+	a:hover {
+		text-decoration: none;
+		color: black;
+	}
+
+.header__info {
+	background: #f2f4f6;
+}
+
+.razmer__sneakers {
+	font-size: 14px;
+	background: #7aaae0;
+	color: white;
+	padding: 3px 7px 3px 7px;
+}
+
+.stars__item {
+	font-size: 27px;
+	color: #949494;
+}
+
+.strile__old_price {
+	color: #949494;
+}
+
+.price_with_sale {
+	color: #a7171a;
+	font-size: 18px;
+}
+
+.item__tittle {
+	padding-bottom: 1rem;
+	border-bottom: 1.1px tomato solid;
+}
+
+.star__active {
+	color: #a7171a;
+}
+
+.header__info {
+	font-size: 12px;
+}
+
+.header__inner {
+	border-bottom: 1.2px #ced0d1 solid;
+}
+
+.search__input {
+	border-top: none;
+	border-left: 1.2px #ced0d1 solid;
+	border-right: 1.2px #ced0d1 solid;
+	border-bottom: none;
+}
+
+.header__main__link {
+	color: black;
+	text-decoration: none;
+}
+
+	.header__main__link:hover {
+		color: black;
+		text-decoration: none;
+	}
+
+.header__main__links__block {
+	padding: 0px 13px 0px 13px;
+	transition: background 0.17s linear;
+	border-radius: 50px;
+}
+
+	.header__main__links__block:hover {
+		background: #3c87d2;
+	}
+
+.header__link {
+	font-size: 22px;
+	color: black;
+	text-decoration: none;
+	transition: color 0.17s linear;
+}
+
+	.header__link:hover {
+		font-size: 22x;
+		color: #a7171a;
+		text-decoration: none;
+	}
+
+.header__tittle {
+	background: #f2f4f6;
+	height: 86px;
+}
+
+.carousel_1 {
+	height: 535px;
+	width: 300%;
+}
+
+.main__slider {
+	background: url('/images/BASE-THEME-free-PSD_02.jpg') no-repeat center top;
+	background-size: 100%;
+	height: 535px;
+}
+
+.main__slider__inner {
+	margin-top: 24%;
+	margin-right: 5rem;
+}
+
+.header__slider_a {
+	color: black;
+	padding: 19px 52px 19px 52px;
+	border: 3px black solid;
+	text-decoration: none;
+	transition: background, color, 0.17s linear;
+}
+
+	.header__slider_a:hover {
+		color: white;
+		background: black;
+		text-decoration: none;
+	}
+
+.link__block {
+	background: #dadedd;
+	transition: box-shadow, transform, 0.24s linear;
+}
+
+.item__card {
+	height: auto;
+	border-left: 14px #d8dfe5 solid;
+	background: white;
+	transition: transform,box-shadow, 0.2s linear;
+}
+
+.item__btn__info {
+	padding: 6px 17px 6px 17px;
+	border: 2px black solid;
+	color:black;
+	transition: background, color, 0.13s linear;
+}
+
+.slick-next, .slick-arrow {
+	color: black;
+}
+
+.already_view_block {
+	background: #6a6363
+}
+
+.item__btn__info:hover {
+	background: black;
+	color: white;
+	text-decoration:none;
+}
+
+.item__fa {
+	transition: color 0.15s linear;
+	font-size: 19px;
+}
+
+	.item__fa:hover {
+		color: #a7171a
+	}
+
+.odejda__color {
+	padding: 2px 11px 2px 11px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.8);
+	margin-left: 5px;
+}
+
+.green {
+	background: #009438;
+}
+
+.red {
+	background: #c32900
+}
+
+.info__block {
+	transition: box-shadow,transform, 0.2s linear;
+}
+
+.footer__icon {
+	font-size: 50px;
+}
+
+.footer__info__main {
+	border-bottom: 1px solid #ced0d1;
+}
+
+.info__block:hover {
+	-webkit-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+.black {
+	background: black;
+}
+
+.test {
+	border: 3px red solid;
+}
+
+.item__img {
+	height: 255px;
+	width: 240px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+.footer__payinfo {
+	background: #f3f5f7;
+}
+
+.item__name {
+	font-size: 19px;
+	margin-top: 6px;
+}
+p{
+	margin:0;
+}
+.apply__categories__filters{
+	padding: 12px 26px 12px 26px;
+	background:black;
+	color:white;
+}
+
+.link__block:hover {
+	box-shadow: 1px 1px #53ea93, 2px 2px #53ea93, 3px 3px #53ea93, 4px 4px #53ea93, 5px 5px #53ea93, 6px 6px #53ea93, 7px 7px #53ea93;
+	-webkit-transform: translateX(-7px);
+	transform: translateX(-7px);
+}
+
+.top__product {
+	background: #d8dfe5
+}
+.shopitems {
+	background: url(../images/BASE-THEME.jpg) no-repeat center top;
+	height: 300px;
+}
+.shop__main {
+	background: #f3f5f7;
+}
+.a__item__page {
+	padding: 10px 15px 10px 15px;
+	border: 1px #bfbfbf solid;
+}
+.prev, .back {
+	padding: 6px 12px 6px 12px;
+	background:#ced0d1;
+	font-size: 22px;
+}
+
+.sale__tag {
+	font-size: 15px;
+	border: 5px 30px 5px 9px;
+	background: #8e1416;
+	color: white;
+}
+
+@media only screen and (max-width: 1300px) {
+	.main__slider__inner {
+		margin-top: 12%;
+		margin-right: 1rem;
+	}
+}
+
+@media only screen and (max-width: 1200px) {
+	.header__slider_a {
+		padding: 13px 30px 13px 30px;
+	}
+}
+
+@media only screen and (max-width: 992px) {
+	.header__slider_a {
+		padding: 11px 25px 11px 25px;
+		font-size: 11px;
+	}
+}

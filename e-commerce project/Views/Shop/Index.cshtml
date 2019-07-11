@@ -1,0 +1,112 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="shopitems">
+
+</div>
+<div class="container">
+	<div class="row mt-4" style="border-top: 1.1px #808080 solid;">
+		<div class="col-12 text-center mt-md-3 pb-3">
+			<h1>ТОВАРЫ</h1>
+		</div>
+	</div>
+</div>
+<div class="shop__main pt-4">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-3">
+				<div class="row">
+					<div class="col-12  pb-4"  style="border-bottom: 1px #bfbfbf solid;">
+						<h4>Категории</h4>
+						<a href="#" class="category__item">Adidas</a><br />
+						<a href="#" class="category__item">Nike</a><br />
+						<a href="#" class="category__item">Puma</a>
+					</div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-12 pb-4" style="border-bottom: 1px #bfbfbf solid;">
+						<h4>Цена</h4>
+						<input type="range" value="5000" class="price__input" />
+					</div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-12">
+						<h4>Размеры</h4>
+					</div>
+					<div class="col-12 pb-4" style="border-bottom: 1px #bfbfbf solid;">
+						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
+						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
+
+					</div>
+				</div>
+				<div class="row mt-4 pb-4" style="border-bottom: 1px #bfbfbf solid;">
+					<div class="col-12 text-center">
+						<a href="#" class="apply__categories__filters">ПРИМЕНИТЬ ФИЛЬТРЫ</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-md-9">
+				<div class="row">
+					<div class="col-12 pt-2 pb-2 d-flex" style="border-bottom: 1px #bfbfbf solid;border-top: 1px #bfbfbf solid;">
+						<p>Вы видите 12 товаров из 200</p>
+						<div class="ml-auto d-flex my-auto">
+							<p>Выберите</p>
+							<input type="number" style="width:50px;" value="" />
+						</div>
+					</div>
+					<div class="col-12 d-flex justify-content-center" style="border-bottom: 1px #bfbfbf solid;">
+						<a class="a__item__page back" href="#"><i class="fa fa-angle-left"></i></a>
+						<a class="a__item__page" href="#">1</a>
+						<a class="a__item__page" href="#">2</a>
+						<a class="a__item__page" href="#">3</a>
+						<a class="a__item__page prev" href="#"><i class="fa fa-angle-right"></i></a>
+					</div>
+				</div>
+				<div class="row">
+					@for (int i = 1; i < 13; i++)
+					{
+						<div class="col-6 col-md-4 mt-3 item__card text-center" style="border:none;">
+							<img class="img-fluid item__img mx-auto mt-2" src="/images/clother2.jpg" alt="">
+
+							<p class="item__name">Куртка Adiddas</p>
+							<div >
+								<a class="razmer__sneakers" href="#">44</a>
+								<a class="razmer__sneakers" href="#">45.6</a>
+								<a class="razmer__sneakers" href="#">42</a>
+								<a class="razmer__sneakers" href="#">45</a>
+							</div>
+
+
+							<p class="item__price mt-1"><strike class="strile__old_price">20.000 руб</strike> &nbsp; <span class="price_with_sale">12.400 руб</span></p>
+							<div class="row">
+								<div class="col-12 justify-content-center mt-md-2">
+									<a href="#" class="item__btn__info">КУПИТЬ</a>
+									<a href="#">
+										<i class="ml-3 fa fa-heart item__fa"></i>
+									</a>
+									<a href="#">
+										<i class="ml-3 fa fa-shopping-cart item__fa"></i>
+									</a>
+
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

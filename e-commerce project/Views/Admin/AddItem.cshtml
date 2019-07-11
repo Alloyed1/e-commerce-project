@@ -1,0 +1,164 @@
+﻿
+@{
+    Layout= "_LayoutAdmin";
+}
+	<link rel="stylesheet" href="~/css/registerandLogin.css">
+	<div class="  col-12 col-lg-7  text-center" id="add__item">
+		<div>
+		<div class="card card-chart" id="add__item__main">
+			<div class="card-body">
+				<h4 class="card-title">Добавление товара</h4>
+				<p class="card-category">Заполните даннные</p>
+
+			</div>
+				<div class="text-center pt-2" style="border-top: 1.2px #808080 solid">
+					<div>
+						<h3 class="text-center">ОСНОВНОЕ</h3>
+						<div class="input-group input-group-alternative text-center">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
+							</div>
+							<input v-model="itemName" class="form-control" placeholder="Название товара" type="text">
+						</div>
+						<div class="input-group input-group-alternative text-center mt-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
+							</div>
+							<textarea style="width:auto" v-model="itemAbout" class="form-control" placeholder="Описание товара" type="text"></textarea>
+						</div>
+						<div class="input-group input-group-alternative text-center mt-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
+							</div>
+							<input v-model="itemPrice" class="form-control" placeholder="Цена в рублях" step="0.001" type="number">
+						</div>
+					</div>
+					<div>
+						<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">ФОТО И СВОЙСТВА</h3>
+						<div class="row">
+							<div class="col-12 col-md-4">
+								<div class="text-center">
+									<input type="file" style="display:none;" ref="fileInputImage_1" v-on:change="isFileSelected(0, $event)" />
+									<button v-on:click="$refs.fileInputImage_1.click()" name="fd" type="button" class="btn btn-danger mt-4">Добавить первое фото</button>
+								</div>
+							</div>
+							<div class="col-12 col-md-4">
+								<div class="text-center">
+									<input  type="file" style="display:none;" ref="fileInputImage_2" v-on:change="isFileSelected(1, $event)" />
+									<button v-on:click="$refs.fileInputImage_2.click()" type="submit" class="btn btn-danger mt-4">Добавить второе фото</button>
+								</div>
+							</div>
+							<div class="col-12 col-md-4">
+								<div class="text-center">
+									<input  type="file" style="display:none;" ref="fileInputImage_3" v-on:change="isFileSelected(2, $event)" />
+									<button v-on:click="$refs.fileInputImage_3.click()" type="submit" class="btn btn-danger mt-4">Добавить третье фото</button>
+								</div>
+							</div>
+						</div>
+						<div class="row mt-3" id="preimush">
+							<div class="col-12 mt-2" v-for="(item, index) in preimush">
+								<div class="input-group input-group-alternative text-center">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
+									</div>
+									<input class="form-control" v-on:change="inputPreimushChange((index + 1), $event.target.value)" placeholder="Введите преимущество" type="text">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div class="text-center">
+									<button v-on:click="addPrimush" type="submit" class="btn btn-secondary mt-4">Добавить преимущество</button>
+								</div>
+							</div>
+							<div class="col" v-if="preimush.length > 0">
+								<div class="text-center">
+									<button v-on:click="deletePreimush" type="submit" class="btn btn-secondary mt-4">Удалить преимущество</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">РАЗМЕРЫ И КОЛИЧЕСТВО</h3>
+						<div class="row ml-1">
+							<div class="col-4 col-md-2 text-center  mt-2" v-for="(size, index) in Object.keys(sizes)">
+								<a class="razmer__sneakers" style="font-size: 14px;background: #7aaae0;color: white;padding: 3px 7px 3px 7px;font-size:20px;" href="#">{{ size }}</a>
+
+								<input v-on:change="inputSizeChange(size, $event.target.value)" class="form-control mt-1" min="0" value="0" placeholder="Кол-во" type="number">
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="row mt-2" style="border-top: 1.2px #808080 solid">
+					<div class="col-12">
+						<div class="text-center">
+							<button type="submit" v-on:click="addItem" class="btn btn-primary mt-4">Добавить товар</button>
+						</div>
+					</div>
+				</div>
+		</div>
+		</div>
+	</div>
+@section  Scripts{ 
+	<script type="text/javascript">
+		var add_item_main = new Vue({
+			el: '#add__item__main',
+			data: {
+				itemName: '',
+				itemAbout: '',
+				itemPrice: 0.0,
+
+				itemImages: [],
+
+				preimush: [],
+				sizes: {
+					35: 0, 36: 0, 37:0,38:0,39:0,40:0,41:0,42:0,43:0,44:0,45:0,46:0,47:0,48:0,
+				}
+
+			},
+			watch: {
+
+			},
+			methods: {
+				addPrimush: function () {
+					this.preimush.push('');
+				},
+				deletePreimush: function () {
+					this.preimush.pop();
+				},
+				inputPreimushChange: function (number, value) {
+					this.preimush[number - 1] = value;
+				},
+				inputSizeChange: function (dictKey, value) {
+					this.sizes[dictKey] = parseInt(value);
+				},
+				isFileSelected: function (value, event) {
+					this.itemImages[value] = event.target.files[0];
+					console.log(this.itemImages);
+				},
+				addItem: function () {
+					$.ajax({
+						type: 'POST',
+						url: '/Admin/AddItem',
+						data: {
+							Name: this.itemName,
+							About: this.itemAbout,
+							Price: this.itemPrice.toString(),
+							ItemPreimush: this.preimush,
+							ItemSizes: this.sizes,
+						},
+						success: function () {
+							alert('Успешно');
+						}
+
+					});
+				}
+
+			},
+			
+		})
+	</script>
+}
+
