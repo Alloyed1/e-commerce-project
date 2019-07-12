@@ -75,22 +75,21 @@
 					</div>
 				</div>
 				<div class="row">
-					@for (int i = 1; i < 13; i++)
-					{
-						<div class="col-6 col-md-4 mt-3 item__card text-center" style="border:none;">
+						<div class="col-6 col-md-4 mt-3 item__card text-center" v-for="(item, index) in items" style="border:none;">
 							<img class="img-fluid item__img mx-auto mt-2" src="/images/clother2.jpg" alt="">
 
-							<p class="item__name">Куртка Adiddas</p>
+							<p class="item__name">{{ item.name }}</p>
 							<div >
-								<a class="razmer__sneakers" href="#">44</a>
-								<a class="razmer__sneakers" href="#">45.6</a>
-								<a class="razmer__sneakers" href="#">42</a>
-								<a class="razmer__sneakers" href="#">45</a>
+								<a class="razmer__sneakers ml-1" v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-if="razmer > 0"  v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''"  href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
 							</div>
 
 
-							<p class="item__price mt-1"><strike class="strile__old_price">20.000 руб</strike> &nbsp; <span class="price_with_sale">12.400 руб</span></p>
-							<div class="row">
+							<p class="item__price mt-1">
+								<strike v-if="item.discount != 0" class="strile__old_price">{{ item.price}} руб</strike> &nbsp;
+								<span v-if="item.discount != 0" v- class="price_with_sale">{{ item.price * ( 100 - item.discount) / 100 }} рублей</span>
+								<span v-else="item.discount != 0" v- class="price__discountnone">{{ item.price }} руб</span>
+							</p>
+							<div class="row mb-2">
 								<div class="col-12 justify-content-center mt-md-2">
 									<a href="#" class="item__btn__info">КУПИТЬ</a>
 									<a href="#">
@@ -103,7 +102,6 @@
 								</div>
 							</div>
 						</div>
-					}
 				</div>
 			</div>
 		</div>

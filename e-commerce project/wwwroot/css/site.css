@@ -29,6 +29,9 @@ a {
 	color: white;
 	padding: 3px 7px 3px 7px;
 }
+.razmer__sneakers_end {
+	background: tomato !important;
+}
 
 .stars__item {
 	font-size: 27px;
@@ -36,12 +39,17 @@ a {
 }
 
 .strile__old_price {
+	font-size: 20px;
 	color: #949494;
 }
 
 .price_with_sale {
 	color: #a7171a;
-	font-size: 18px;
+	font-size: 25px;
+}
+.price__discountnone {
+	font-size: 25px;
+	color: #a7171a;
 }
 
 .item__tittle {

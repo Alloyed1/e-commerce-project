@@ -64,6 +64,11 @@ namespace e_commerce_project.Controllers
 		{
 			return await adminRepository.GetAllItems();
 		}
+		[HttpGet]
+		public IActionResult AllItems()
+		{
+			return View();
+		}
 
 	}
 }

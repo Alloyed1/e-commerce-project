@@ -1,0 +1,61 @@
+﻿
+@{
+	Layout = "_LayoutAdmin";
+}
+
+	<div class="col-12" id="main__allitems">
+		<div class="card">
+			<div class="card-header card-header-warning">
+				<h4 class="card-title">Все товары</h4>
+				<p class="card-category">Выберите нужно вам действие</p>
+			</div>
+			<div class="card-body table-responsive">
+				<table class="table table-hover">
+					<thead class="text-warning">
+					<th>ID</th>
+					<th>Название</th>
+					<th>Цена</th>
+					<th>Скидка в %</th>
+					<th>Размеры в продаже</th>
+					<th>Количество продаж</th>
+					<th>Действие</th>
+					</thead>
+					<tbody>
+						<tr v-for="item in items">
+							<td>{{ item.id + 1 }}</td>
+							<td>{{ item.name }}</td>
+							<td>{{ item.price }}</td>
+							<td>{{ item.discount }}</td>
+							<td>
+								<a class="razmer__sneakers ml-1" v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''" v-if="razmer > 0" href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
+							</td>
+							<td>{{ item.countOfPurchases }}</td>
+							<td>
+								<a href="#" class="btn" style="font-size: 10px; background:#0094ff">Убрать с продажи</a>
+								<a href="#" class="btn" style="font-size: 10px; background:#0094ff">Изменить</a>
+								<a href="#" class="btn" style="font-size: 10px; background:#ff0000">Удалить</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+@section Scripts{ 
+	<script type="text/javascript">
+		var allitems = new Vue({
+			el: '#main__allitems',
+			data: {
+				items:[]
+			},
+			mounted() {
+				axios.get('/Admin/GetAllItemsInShop')
+					.then(res => {
+						this.items = res.data;
+						console.log(this.items);
+					});
+			}
+		});
+	</script>
+}
+
