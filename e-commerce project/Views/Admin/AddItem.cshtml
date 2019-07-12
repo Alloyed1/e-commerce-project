@@ -139,16 +139,17 @@
 					console.log(this.itemImages);
 				},
 				addItem: function () {
-					$.ajax({
-						type: 'POST',
-						url: '/Admin/AddItem',
-						data: {
+					var data = {
 							Name: this.itemName,
 							About: this.itemAbout,
 							Price: this.itemPrice.toString(),
 							ItemPreimush: this.preimush,
-							ItemSizes: this.sizes,
-						},
+							ItemSizes: this.sizes
+					}
+					$.ajax({
+						method: 'POST',
+						url: '/Admin/TestAction',
+						data: data,
 						success: function () {
 							alert('Успешно');
 						}

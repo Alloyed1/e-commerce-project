@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using e_commerce_project.Models;
+using e_commerce_project.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,8 @@ namespace e_commerce_project
 				.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddEntityFrameworkStores<ApplicationContext>()
 				.AddDefaultTokenProviders();
+
+			services.AddScoped<IAdminRepository, AdminRepository>();
 
 
 			services.ConfigureApplicationCookie(options =>

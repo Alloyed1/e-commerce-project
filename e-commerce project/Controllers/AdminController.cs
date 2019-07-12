@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using e_commerce_project.Models;
+using e_commerce_project.Repositories;
+using e_commerce_project.ViewModel.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +14,12 @@ using Newtonsoft.Json;
 
 namespace e_commerce_project.Controllers
 {
-	[Authorize(Roles ="Admin")]
 	public class AdminController : Controller
 	{
-		public AdminController()
+		private IAdminRepository adminRepository;
+		public AdminController(IAdminRepository adminRepository)
 		{
-
+			this.adminRepository = adminRepository;
 		}
 		public IActionResult Index()
 		{
@@ -29,7 +31,7 @@ namespace e_commerce_project.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult AddItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, IFormFile Image)
+		public async Task  AddNewItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush)
 		{
 			Item item = new Item();
 			item.Name = Name;
@@ -38,8 +40,29 @@ namespace e_commerce_project.Controllers
 			item.AdvantagesArray = JsonConvert.SerializeObject( ItemPreimush);
 			item.SizesDictionary = JsonConvert.SerializeObject(ItemSizes);
 			item.Discount = 0;
-			return View();
+			item.AddItemTime = DateTime.Now;
 
+			await adminRepository.AddItem(item);
+
+		}
+		[HttpPost]
+		public async Task TestAction(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush)
+		{
+			Item item = new Item();
+			item.Name = Name;
+			item.About = About;
+			item.Price = Convert.ToDouble(Price);
+			item.AdvantagesArray = JsonConvert.SerializeObject(ItemPreimush);
+			item.SizesDictionary = JsonConvert.SerializeObject(ItemSizes);
+			item.Discount = 0;
+			item.AddItemTime = DateTime.Now;
+
+			await adminRepository.AddItem(item);
+		}
+		[HttpGet]
+		public async Task<List<ItemShopViewModel>> GetAllItemsInShop()
+		{
+			return await adminRepository.GetAllItems();
 		}
 
 	}
