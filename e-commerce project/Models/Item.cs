@@ -19,6 +19,9 @@ namespace e_commerce_project.Models
 		public DateTime AddItemTime { get; set; }
 		public string SizesDictionary { get; set; }
 		public string AdvantagesArray { get; set; }
+		
+		public byte IsDelete { get; set; }
+		public byte IsHide { get; set; }
 
 		public byte[] FirstImage { get; set; }
 		public byte[] SecondImage { get; set; }

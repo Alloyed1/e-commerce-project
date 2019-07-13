@@ -17,6 +17,9 @@ namespace e_commerce_project.ViewModel.Account
 		public Dictionary<int, int> SizesDictionary { get; set; }
 		public string[] AdvantagesArray { get; set; }
 
+		public byte IsHide { get; set; }
+		public byte IsDelete { get; set; }
+
 		public byte[] FirstImage { get; set; }
 		public byte[] SecondImage { get; set; }
 		public byte[] ThirdImage { get; set; }

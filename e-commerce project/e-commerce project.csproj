@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190712194516_firstOnServer.cs" />
+    <Compile Remove="Migrations\20190712194516_firstOnServer.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\js\jquery.viewportchecker.js" />
     <None Include="wwwroot\js\jquery.viewportchecker.min.js" />
     <None Include="wwwroot\js\main.js" />

@@ -12,28 +12,28 @@
 			<div class="card-body table-responsive">
 				<table class="table table-hover">
 					<thead class="text-warning">
-					<th>ID</th>
-					<th>Название</th>
-					<th>Цена</th>
-					<th>Скидка в %</th>
-					<th>Размеры в продаже</th>
-					<th>Количество продаж</th>
-					<th>Действие</th>
+						<th>ID</th>
+						<th>Название</th>
+						<th>Цена</th>
+						<th>Скидка в %</th>
+						<th>Размеры в продаже</th>
+						<th>Количество продаж</th>
+						<th>Действие</th>
 					</thead>
 					<tbody>
-						<tr v-for="item in items">
-							<td>{{ item.id + 1 }}</td>
+						<tr v-for="item in items" :id="item.id" v-bind:class="!(item.isHide == 0 && item.isDelete == 0) ? 'admin__tr__hide' : ''">
+							<td>{{ item.id }}</td>
 							<td>{{ item.name }}</td>
-							<td>{{ item.price }}</td>
+							<td>{{ item.price | moneyFormat }}</td>
 							<td>{{ item.discount }}</td>
 							<td>
 								<a class="razmer__sneakers ml-1" v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''" v-if="razmer > 0" href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
 							</td>
 							<td>{{ item.countOfPurchases }}</td>
 							<td>
-								<a href="#" class="btn" style="font-size: 10px; background:#0094ff">Убрать с продажи</a>
+								<a v-if="item.isHide == 0 && item.isDelete == 0" v-on:click="hideItem(item.id)" href="#" class="btn" style="font-size: 10px; background:#0094ff">Убрать с продажи</a>
+								<a v-else="" v-on:click="hideItemOff(item.id)" href="#" class="btn" style="font-size: 10px; background:#0094ff">Вернуть в продажу</a>
 								<a href="#" class="btn" style="font-size: 10px; background:#0094ff">Изменить</a>
-								<a href="#" class="btn" style="font-size: 10px; background:#ff0000">Удалить</a>
 							</td>
 						</tr>
 					</tbody>
@@ -54,6 +54,43 @@
 						this.items = res.data;
 						console.log(this.items);
 					});
+				
+
+			},
+			methods: {
+				hideItem: function (id) {
+					axios.post('/Admin/HideItem?id=' + id)
+						.then(res => {
+							$('#' + id).toggleClass('admin__tr__hide');
+						});
+				},
+				hideItemOff: function (id) {
+					axios.post('/Admin/HideItemOff?id=' + id)
+						.then(res => {
+							$('#' + id).toggleClass('admin__tr__hide');
+						});
+				}
+			},
+			filters: {
+				moneyFormat: function (value) {
+					var mass = value.toString().split("").reverse();
+					var mass2 = [];
+					let j = 0;
+					for (var i = 0; i < value.toString().length; i++) {
+							if (j == 3) {
+								mass2.push('.');
+								mass2.push(mass[i]);			
+							
+								j = 1;
+							}
+							else {
+								mass2.push(mass[i]);
+								j++;
+							}
+					}
+					return mass2.reverse().join("");
+
+				}
 			}
 		});
 	</script>

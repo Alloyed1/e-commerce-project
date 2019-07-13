@@ -8,6 +8,9 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
 	font-family: 'Roboto Condensed', sans-serif;
 }
+a, p, div, img, form, button{
+	box-sizing:border-box;
+}
 
 a {
 	text-decoration: none;
@@ -17,7 +20,12 @@ a {
 	a:hover {
 		text-decoration: none;
 		color: black;
+		
 	}
+
+.admin__tr__hide {
+	background: #ffd800;
+}
 
 .header__info {
 	background: #f2f4f6;
@@ -104,7 +112,7 @@ a {
 }
 
 	.header__link:hover {
-		font-size: 22x;
+		font-size: 22px;
 		color: #a7171a;
 		text-decoration: none;
 	}
@@ -206,6 +214,7 @@ a {
 
 .footer__icon {
 	font-size: 50px;
+	margin-left: 11px;
 }
 
 .footer__info__main {
@@ -299,5 +308,9 @@ p{
 	.header__slider_a {
 		padding: 11px 25px 11px 25px;
 		font-size: 11px;
+	}
+	.footer__icon{
+		font-size:25px;
+		margin-left: 15px;
 	}
 }

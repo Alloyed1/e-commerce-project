@@ -25,7 +25,10 @@
 }
 .a__adminpanel:hover {
 	text-decoration: none;
-	color: black:
+	color: black;
+}
+.admin__tr__hide {
+	background: #ffd800;
 }
 /* offline-doc */
 .offline-doc .navbar.navbar-transparent {

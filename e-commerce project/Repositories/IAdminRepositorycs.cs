@@ -18,6 +18,8 @@ namespace e_commerce_project.Repositories
 	{
 		Task AddItem(Item item);
 		Task<List<ItemShopViewModel>> GetAllItems();
+		Task HideItem(int itemId);
+		Task HideItemOff(int itemId);
 	}
 	public class AdminRepository: IAdminRepository
 	{
@@ -50,17 +52,36 @@ namespace e_commerce_project.Repositories
 				foreach (var item in items)
 				{
 					ItemShopViewModel itemShop = new ItemShopViewModel();
+					itemShop.Id = item.Id;
 					itemShop.Name = item.Name;
 					itemShop.About = item.About;
 					itemShop.Price = item.Price;
 					itemShop.Discount = item.Discount;
 					itemShop.Brand = item.Brand;
 					itemShop.Category = item.Category;
+					itemShop.IsDelete = item.IsDelete;
+					itemShop.IsHide = item.IsHide;
 					itemShop.SizesDictionary = JsonConvert.DeserializeObject<Dictionary<int, int>>(item.SizesDictionary);
 					itemShop.AdvantagesArray = JsonConvert.DeserializeObject<string[]>(item.AdvantagesArray);
 					itemShopList.Add(itemShop);
 				}
 				return itemShopList;
+			}
+		}
+		public async Task HideItem(int itemId)
+		{
+			using (IDbConnection dbDapper = new SqlConnection(connectionString))
+			{
+				var query = "UPDATE Items SET IsHide = 1 WHERE Id = @itemId";
+				await dbDapper.ExecuteAsync(query, new { itemId });
+			}
+		}
+		public async Task HideItemOff(int itemId)
+		{
+			using (IDbConnection dbDapper = new SqlConnection(connectionString))
+			{
+				var query = "UPDATE Items SET IsHide = 0 WHERE Id = @itemId";
+				await dbDapper.ExecuteAsync(query, new { itemId });
 			}
 		}
 

@@ -69,6 +69,21 @@ namespace e_commerce_project.Controllers
 		{
 			return View();
 		}
+		[HttpPost]
+		public async Task HideItem(int id)
+		{
+			await adminRepository.HideItem(id);
+		}
+		[HttpPost]
+		public async Task HideItemOff(int id)
+		{
+			await adminRepository.HideItemOff(id);
+		}
+		[HttpGet]
+		public IActionResult EditItem(ItemShopViewModel model)
+		{
+			return View();
+		}
 
 	}
 }
