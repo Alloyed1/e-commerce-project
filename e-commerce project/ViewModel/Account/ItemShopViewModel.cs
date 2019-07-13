@@ -19,6 +19,8 @@ namespace e_commerce_project.ViewModel.Account
 
 		public byte IsHide { get; set; }
 		public byte IsDelete { get; set; }
+		
+		public string[] ItemImagesLinks { get; set; }
 
 		public byte[] FirstImage { get; set; }
 		public byte[] SecondImage { get; set; }

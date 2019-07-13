@@ -33,7 +33,7 @@
 							<td>
 								<a v-if="item.isHide == 0 && item.isDelete == 0" v-on:click="hideItem(item.id)" href="#" class="btn" style="font-size: 10px; background:#0094ff">Убрать с продажи</a>
 								<a v-else="" v-on:click="hideItemOff(item.id)" href="#" class="btn" style="font-size: 10px; background:#0094ff">Вернуть в продажу</a>
-								<a href="#" class="btn" style="font-size: 10px; background:#0094ff">Изменить</a>
+								<a v-on:click="editItem(item.id)" class="btn btn-warning text-white" style="font-size: 10px">Изменить</a>
 							</td>
 						</tr>
 					</tbody>
@@ -62,13 +62,18 @@
 					axios.post('/Admin/HideItem?id=' + id)
 						.then(res => {
 							$('#' + id).toggleClass('admin__tr__hide');
+							
 						});
+						
 				},
 				hideItemOff: function (id) {
 					axios.post('/Admin/HideItemOff?id=' + id)
 						.then(res => {
 							$('#' + id).toggleClass('admin__tr__hide');
 						});
+				},
+				editItem: function (id) {
+					window.location.href = "/Admin/EditItem?itemId=" + id;
 				}
 			},
 			filters: {

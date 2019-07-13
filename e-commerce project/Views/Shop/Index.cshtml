@@ -75,16 +75,14 @@
 					</div>
 				</div>
 				<div class="row justify-content-center">
-						<div class="col-10 col-md-4 mt-3 item__card text-center"  v-for="(item, index) in items" v-if="item.isHide == 0 && item.isDelete == 0" style="border:none;">
-							<img class="img-fluid item__img mx-auto mt-2" src="/images/clother2.jpg" alt="">
+						<div class="col-8 col-md-4 mt-3 card item__card text-center"  v-for="(item, index) in items" v-if="item.isHide == 0 && item.isDelete == 0" style="border:none;">
+							<img class="img-fluid card-img-top mx-auto mt-2" :src="item.itemImagesLinks[0]" alt="">
 
 							<p class="item__name">{{ item.name }}</p>
 							<div >
 								<a class="razmer__sneakers ml-1" v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-if="razmer > 0"  v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''"  href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
 							</div>
-
-
-							<p class="item__price mt-1">
+							<p class="item__price mt-1 pb-2 pb-md-0">
 								<strike v-if="item.discount != 0" class="strile__old_price">{{ item.price | moneyFormat}} руб</strike> &nbsp;
 								<span v-if="item.discount != 0" v- class="price_with_sale">{{ (item.price * ( 100 - item.discount) / 100).toFixed() | moneyFormat }} руб</span>
 								<span v-else="item.discount != 0" v- class="price__discountnone">{{ item.price | moneyFormat }} руб</span>
@@ -120,6 +118,9 @@
 						this.items = res.data;
 						console.log(this.items);
 					});
+			},
+			methods: {
+				
 			},
 			filters: {
 				moneyFormat: function (value) {

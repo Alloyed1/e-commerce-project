@@ -30,11 +30,11 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
 							</div>
-							<input v-model="itemPrice" class="form-control" placeholder="Цена в рублях" step="0.001" type="number">
+							<input v-model="itemPrice" class="form-control" placeholder="Цена в рублях" type="number">
 						</div>
 					</div>
 					<div>
-						<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">ФОТО И СВОЙСТВА</h3>
+						<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">ФОТО</h3>
 						<div class="row">
 							<div class="col-12 col-md-4">
 								<div class="text-center">
@@ -44,24 +44,40 @@
 							</div>
 							<div class="col-12 col-md-4">
 								<div class="text-center">
-									<input  type="file" style="display:none;" ref="fileInputImage_2" v-on:change="isFileSelected(1, $event)" />
+									<input type="file" style="display:none;" ref="fileInputImage_2" v-on:change="isFileSelected(1, $event)" />
 									<button v-on:click="$refs.fileInputImage_2.click()" type="submit" class="btn btn-danger mt-4">Добавить второе фото</button>
 								</div>
 							</div>
 							<div class="col-12 col-md-4">
 								<div class="text-center">
-									<input  type="file" style="display:none;" ref="fileInputImage_3" v-on:change="isFileSelected(2, $event)" />
+									<input type="file" style="display:none;" ref="fileInputImage_3" v-on:change="isFileSelected(2, $event)" />
 									<button v-on:click="$refs.fileInputImage_3.click()" type="submit" class="btn btn-danger mt-4">Добавить третье фото</button>
 								</div>
 							</div>
+							<div class="col-12 mt-3">
+								<h3 class="text-center">Или введите ссылку на изображение</h3>
+							</div>
+							
+							<div class="col-12 col-md-4">
+								<input v-model="itemImageLink[0]" class="form-control" placeholder="Введите ссылку на главное изображение" type="text">
+							</div>
+							<div class="col-12 col-md-4">
+								<input v-model="itemImageLink[1]" class="form-control" placeholder="Введите ссылку на второе изображение" type="text">
+							</div>
+							<div class="col-12 col-md-4">
+								<input v-model="itemImageLink[2]" class="form-control" placeholder="Введите ссылку на третье изображение" type="text">
+							</div>
 						</div>
 						<div class="row mt-3" id="preimush">
+							<div class="col-12 mt-3">
+								<h3 class="text-center">Преимущества</h3>
+							</div>
 							<div class="col-12 mt-2" v-for="(item, index) in preimush">
 								<div class="input-group input-group-alternative text-center">
 									<div class="input-group-prepend">
 										<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
 									</div>
-									<input class="form-control" v-on:change="inputPreimushChange((index + 1), $event.target.value)" placeholder="Введите преимущество" type="text">
+									<input class="form-control" v-model="item" v-on:change="inputPreimushChange((index + 1), $event.target.value)" placeholder="Введите преимущество" type="text">
 								</div>
 							</div>
 						</div>
@@ -84,7 +100,7 @@
 							<div class="col-4 col-md-2 text-center  mt-2" v-for="(size, index) in Object.keys(sizes)">
 								<a class="razmer__sneakers" style="font-size: 14px;background: #7aaae0;color: white;padding: 3px 7px 3px 7px;font-size:20px;" href="#">{{ size }}</a>
 
-								<input v-on:change="inputSizeChange(size, $event.target.value)" class="form-control mt-1" min="0" value="0" placeholder="Кол-во" type="number">
+								<input v-model="Object.values(sizes)[index]" v-on:change="inputSizeChange(size, $event.target.value)" class="form-control mt-1" min="0" value="0" placeholder="Кол-во" type="number">
 							</div>
 						</div>
 					</div>
@@ -111,6 +127,7 @@
 				itemPrice: 0.0,
 
 				itemImages: [],
+				itemImageLink: ['', '' ,''],
 
 				preimush: [],
 				sizes: {
@@ -119,7 +136,9 @@
 
 			},
 			watch: {
-
+				itemImageLink: function () {
+					console.log(this.itemImageLink);
+				}
 			},
 			methods: {
 				addPrimush: function () {
@@ -140,15 +159,17 @@
 				},
 				addItem: function () {
 					var data = {
-							Name: this.itemName,
-							About: this.itemAbout,
-							Price: this.itemPrice.toString(),
-							ItemPreimush: this.preimush,
-							ItemSizes: this.sizes
+						Name: this.itemName,
+						About: this.itemAbout,
+						Price: this.itemPrice.toString(),
+						ItemPreimush: this.preimush,
+						ItemSizes: this.sizes,
+						ItemImagesLinks: this.itemImageLink
+											
 					}
 					$.ajax({
 						method: 'POST',
-						url: '/Admin/TestAction',
+						url: '/Admin/AddItemInShop',
 						data: data,
 						success: function () {
 							alert('Успешно');

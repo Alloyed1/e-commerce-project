@@ -27,6 +27,8 @@ namespace e_commerce_project.Models
 		public byte[] SecondImage { get; set; }
 		public byte[] ThirdImage { get; set; }
 
+		public string ItemImagesLinks { get; set; }
+
 		public int? Discount { get; set; }
 
 		public Brand Brand { get; set; }
