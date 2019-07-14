@@ -32,23 +32,11 @@
 					</div>
 				</div>
 				<div class="row mt-3">
-					<div class="col-12">
+					<div class="col-12 pb-2">
 						<h4>Размеры</h4>
 					</div>
-					<div class="col-12 pb-4" style="border-bottom: 1px #bfbfbf solid;">
-						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">41</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">42</a>
-						<a class="razmer__sneakers ml-1 mt-1" href="#">43</a>
-
+					<div style="margin-top:-10px;margin-left:2px;" v-for="(size, index) in sizeFilter" class="col-1 pb-4">
+						<a  class="razmer__sneakers mt-1" href="#">{{size}}</a>
 					</div>
 				</div>
 				<div class="row mt-4 pb-4" style="border-bottom: 1px #bfbfbf solid;">
@@ -110,14 +98,29 @@
 		var shop = new Vue({
 			el: '#shop__main__page',
 			data: {
-				items: []
+				items: [],
+				sizeFilter: []
 			},
 			mounted() {
-				axios.get('/Admin/GetAllItemsInShop')
-					.then(res => {
-						this.items = res.data;
-						console.log(this.items);
-					});
+				$.ajax({
+					type: 'GET',
+					url: '/Admin/GetAllItemsInShop',
+					async: true,
+					success: (res) => {
+						this.items = res;
+
+						res.forEach((element) => {
+							var sizes = [];
+							sizes = element.sizesDictionary;
+							for (var size in sizes) {
+								if (sizes[size] != 0 && this.sizeFilter.indexOf(size) == -1) {
+									this.sizeFilter.push(size);
+								}
+							}
+						});
+						console.log(this.sizeFilter);
+					}
+				});
 			},
 			methods: {
 				

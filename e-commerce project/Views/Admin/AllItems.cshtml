@@ -54,6 +54,13 @@
 						this.items = res.data;
 						console.log(this.items);
 					});
+				$.ajax({
+					type: 'GET',
+					url: '/Admin/GetAllItemsInShop',
+					success: (res) => {
+						this.items = res;
+					}
+				});
 				
 
 			},

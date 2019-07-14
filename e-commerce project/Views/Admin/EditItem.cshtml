@@ -140,7 +140,7 @@
 
 			},
 			mounted() {
-				axios.get('/Admin/GetItemInShop?id=' + @Model)
+				@*axios.get('/Admin/GetItemInShop?id=' + @Model)
 					.then(res => {
 						this.itemName = res.data.name;
 						this.itemAbout = res.data.about;
@@ -150,7 +150,20 @@
 						this.itemId = parseInt(res.data.id, 10);
 						this.itemImageLink = res.data.itemImagesLinks;
 						console.log(res.data);
-					});
+					});*@
+				$.ajax({
+					type: 'GET',
+					url: '/Admin/GetItemInShop?id=' + @Model,
+					success: (res) => {
+						this.itemName = res.name;
+						this.itemAbout = res.about;
+						this.itemPrice = parseInt(res.price, 10);
+						this.preimush = res.advantagesArray;
+						this.sizes = res.sizesDictionary;
+						this.itemId = parseInt(res.id, 10);
+						this.itemImageLink = res.itemImagesLinks;
+					}
+				});
 			},
 			methods: {
 				addPrimush: function () {
