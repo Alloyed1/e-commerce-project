@@ -26,10 +26,28 @@ a {
 .admin__tr__hide {
 	background: #ffd800;
 }
+.size-active {
+	background: tomato !important;
+	box-shadow: 0 0 10px rgba(0,0,0,0.8);
+	font-size: 19px !important;
+}
 
 .header__info {
 	background: #f2f4f6;
 }
+.razmer__sneakers__filer {
+	font-size: 14px;
+	background: #7aaae0;
+	color: white;
+	padding: 3px 7px 3px 7px;
+	transition: all 0.27s ease;
+}
+
+	.razmer__sneakers__filer:hover {
+		box-shadow: 0 0 10px rgba(0,0,0,0.8);
+		background: tomato !important;
+		font-size: 19px;
+	}
 
 .razmer__sneakers {
 	font-size: 14px;
@@ -256,6 +274,11 @@ p{
 	padding: 12px 26px 12px 26px;
 	background:black;
 	color:white;
+	transition: all 0.2s ease;
+}
+.apply__categories__filters:hover {
+	background: tomato;
+	color: white;
 }
 
 .link__block:hover {

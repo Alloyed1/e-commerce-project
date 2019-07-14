@@ -35,13 +35,13 @@
 					<div class="col-12 pb-2">
 						<h4>Размеры</h4>
 					</div>
-					<div style="margin-top:-10px;margin-left:2px;" v-for="(size, index) in sizeFilter" class="col-1 pb-4">
-						<a  class="razmer__sneakers mt-1" href="#">{{size}}</a>
+					<div style="margin-top:-10px;margin-left:6px;" v-for="(size, index) in sizeFilter" class="col-1 pb-4">
+						<a href="#"  v-on:click="sizeAddFilter(size, $event)"   class="razmer__sneakers__filer mt-1" v-bind:class="(sizeFilterActive.indexOf(size) != -1) ? 'size-active' : ''">{{size}}</a>
 					</div>
 				</div>
 				<div class="row mt-4 pb-4" style="border-bottom: 1px #bfbfbf solid;">
 					<div class="col-12 text-center">
-						<a href="#" class="apply__categories__filters">ПРИМЕНИТЬ ФИЛЬТРЫ</a>
+						<a href="#" v-on:click="applyFilters($event)" class="apply__categories__filters">ПРИМЕНИТЬ ФИЛЬТРЫ</a>
 					</div>
 				</div>
 			</div>
@@ -62,8 +62,8 @@
 						<a class="a__item__page prev" href="#"><i class="fa fa-angle-right"></i></a>
 					</div>
 				</div>
-				<div class="row justify-content-center">
-						<div class="col-8 col-md-4 mt-3 card item__card text-center"  v-for="(item, index) in items" v-if="item.isHide == 0 && item.isDelete == 0" style="border:none;">
+				<div class="row justify-content-center" v-if="!pageIsLoad">
+						<div class="col-8 col-md-4 mt-3 card item__card text-center"  v-for="(item, index) in items" v-if="item.isHide == 0 && item.isDelete == 0 && itemFilterIsShow[index] == 1 " style="border:none;">
 							<img class="img-fluid card-img-top mx-auto mt-2" :src="item.itemImagesLinks[0]" alt="">
 
 							<p class="item__name">{{ item.name }}</p>
@@ -89,6 +89,11 @@
 							</div>
 						</div>
 				</div>
+				<div class="row justify-content-center" style="height:450px;" v-else="">
+					<div class="spinner-border text-success my-auto " style="width: 5rem; height: 5rem; font-size:25px;" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -99,7 +104,11 @@
 			el: '#shop__main__page',
 			data: {
 				items: [],
-				sizeFilter: []
+				itemFilterIsShow: [],
+				pageIsLoad: false,
+
+				sizeFilter: [],
+				sizeFilterActive:[],
 			},
 			mounted() {
 				$.ajax({
@@ -110,6 +119,7 @@
 						this.items = res;
 
 						res.forEach((element) => {
+							this.itemFilterIsShow.push(1);
 							var sizes = [];
 							sizes = element.sizesDictionary;
 							for (var size in sizes) {
@@ -123,7 +133,39 @@
 				});
 			},
 			methods: {
-				
+				sizeAddFilter: function (size, event)  {
+					event.preventDefault();
+					if (this.sizeFilterActive.indexOf(size) != -1) {
+						this.sizeFilterActive.splice(this.sizeFilterActive.indexOf(size), 1);
+					}
+					else {
+						this.sizeFilterActive.push(size);
+					}
+					
+				},
+				applyFilters: function (event) {
+					this.pageIsLoad = true;
+					event.preventDefault();
+
+					this.items.forEach((element, index) => {
+						let sizeIsFind = 0;
+						let countSizesFilter = this.sizeFilterActive.length;
+						for (var size in element.sizesDictionary) {
+							if (this.sizeFilterActive.indexOf(size) != -1 && element.sizesDictionary[size] != 0 ) {
+								sizeIsFind++;
+							}
+						}
+						if (countSizesFilter != sizeIsFind) {
+							this.itemFilterIsShow[index] = 0;
+						}
+						else {
+							this.itemFilterIsShow[index] = 1;
+						}
+						this.itemFilterIsShow.push(1);
+						this.itemFilterIsShow.pop();
+					})
+					this.pageIsLoad = false;
+				}
 			},
 			filters: {
 				moneyFormat: function (value) {
