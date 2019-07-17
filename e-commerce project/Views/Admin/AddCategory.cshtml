@@ -1,0 +1,65 @@
+﻿
+@{
+	Layout = "_LayoutAdmin";
+}
+
+<link rel="stylesheet" href="~/css/registerandLogin.css">
+<div class="  col-12 col-lg-7  text-center" id="add__category">
+	<div>
+		<div class="card card-chart" id="add__item__main">
+			<div class="card-body">
+				<h4 class="card-title">Добавление категории</h4>
+				<p class="card-category">Заполните даннные</p>
+
+			</div>
+			<div class="text-center pt-2" style="border-top: 1.2px #808080 solid">
+				<div>
+					<h3 class="text-center">ОСНОВНОЕ</h3>
+					<div class="input-group input-group-alternative text-center">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
+						</div>
+						<input v-model="categoryName" class="form-control" placeholder="Имя категории" type="text">
+					</div>
+
+			<div class="row mt-2" style="border-top: 1.2px #808080 solid">
+				<div class="col-12">
+					<div class="text-center">
+						<button type="button" v-on:click="addCategory" class="btn btn-primary mt-4">Добавить категорию</button>
+					</div>
+				</div>
+			</div>
+		</div>
+				</div>
+	</div>
+		</div>
+</div>
+@section Scripts{ 
+	<script type="text/javascript">
+		var addCategory_vue = new Vue({
+			el: '#add__category',
+			data: {
+				categoryName: ''
+			},
+			watch: {
+				
+			},
+			methods: {
+				addCategory: function () {
+					var data = {
+						CategoryName: this.categoryName
+					}
+					$.ajax({
+						type: 'POST',
+						url: '/Admin/AddCategory',
+						data: data,
+						success: function () {
+							alert('Успешно');
+						}
+					})
+				}
+			}
+		});
+	</script>
+}
+

@@ -17,9 +17,11 @@ namespace e_commerce_project.Controllers
 	public class AdminController : Controller
 	{
 		private IAdminRepository adminRepository;
-		public AdminController(IAdminRepository adminRepository)
+		private ICategoryRepository categoryRepository;
+		public AdminController(IAdminRepository adminRepository, ICategoryRepository categoryRepository)
 		{
 			this.adminRepository = adminRepository;
+			this.categoryRepository = categoryRepository;
 		}
 		public IActionResult Index()
 		{
@@ -29,6 +31,22 @@ namespace e_commerce_project.Controllers
 		public IActionResult AddItem()
 		{
 			return View();
+		}
+		[HttpGet]
+		public IActionResult AddCategory()
+		{
+			return View();
+		}
+		[HttpPost]
+		public async Task AddCategory(string CategoryName)
+		{
+			await categoryRepository.AddCategory(CategoryName);
+		}
+
+		[HttpGet]
+		public async Task<List<Category>> GetAllCaregories()
+		{
+			return await categoryRepository.GetAllCaregories();
 		}
 
 		[HttpPost]

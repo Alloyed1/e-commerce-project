@@ -11,100 +11,110 @@
 				<p class="card-category">Заполните даннные</p>
 
 			</div>
-				<div class="text-center pt-2" style="border-top: 1.2px #808080 solid">
-					<div>
-						<h3 class="text-center">ОСНОВНОЕ</h3>
-						<div class="input-group input-group-alternative text-center">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
-							</div>
-							<input v-model="itemName" class="form-control" placeholder="Название товара" type="text">
+			<div class="text-center pt-2" style="border-top: 1.2px #808080 solid">
+				<div>
+					<h3 class="text-center">ОСНОВНОЕ</h3>
+					<div class="input-group input-group-alternative text-center">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
 						</div>
-						<div class="input-group input-group-alternative text-center mt-3">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
-							</div>
-							<textarea style="width:auto" v-model="itemAbout" class="form-control" placeholder="Описание товара" type="text"></textarea>
-						</div>
-						<div class="input-group input-group-alternative text-center mt-3">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
-							</div>
-							<input v-model="itemPrice" class="form-control" placeholder="Цена в рублях" type="number">
-						</div>
+						<input v-model="itemName" class="form-control" placeholder="Название товара" type="text">
 					</div>
-					<div>
-						<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">ФОТО</h3>
-						<div class="row">
-							<div class="col-12 col-md-4">
-								<div class="text-center">
-									<input type="file" style="display:none;" ref="fileInputImage_1" v-on:change="isFileSelected(0, $event)" />
-									<button v-on:click="$refs.fileInputImage_1.click()" name="fd" type="button" class="btn btn-danger mt-4">Добавить первое фото</button>
-								</div>
-							</div>
-							<div class="col-12 col-md-4">
-								<div class="text-center">
-									<input type="file" style="display:none;" ref="fileInputImage_2" v-on:change="isFileSelected(1, $event)" />
-									<button v-on:click="$refs.fileInputImage_2.click()" type="submit" class="btn btn-danger mt-4">Добавить второе фото</button>
-								</div>
-							</div>
-							<div class="col-12 col-md-4">
-								<div class="text-center">
-									<input type="file" style="display:none;" ref="fileInputImage_3" v-on:change="isFileSelected(2, $event)" />
-									<button v-on:click="$refs.fileInputImage_3.click()" type="submit" class="btn btn-danger mt-4">Добавить третье фото</button>
-								</div>
-							</div>
-							<div class="col-12 mt-3">
-								<h3 class="text-center">Или введите ссылку на изображение</h3>
-							</div>
-							
-							<div class="col-12 col-md-4">
-								<input v-model="itemImageLink[0]" class="form-control" placeholder="Введите ссылку на главное изображение" type="text">
-							</div>
-							<div class="col-12 col-md-4">
-								<input v-model="itemImageLink[1]" class="form-control" placeholder="Введите ссылку на второе изображение" type="text">
-							</div>
-							<div class="col-12 col-md-4">
-								<input v-model="itemImageLink[2]" class="form-control" placeholder="Введите ссылку на третье изображение" type="text">
-							</div>
+					<div class="input-group input-group-alternative text-center mt-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
 						</div>
-						<div class="row mt-3" id="preimush">
-							<div class="col-12 mt-3">
-								<h3 class="text-center">Преимущества</h3>
-							</div>
-							<div class="col-12 mt-2" v-for="(item, index) in preimush">
-								<div class="input-group input-group-alternative text-center">
-									<div class="input-group-prepend">
-										<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
-									</div>
-									<input class="form-control" v-model="item" v-on:change="inputPreimushChange((index + 1), $event.target.value)" placeholder="Введите преимущество" type="text">
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<div class="text-center">
-									<button v-on:click="addPrimush" type="submit" class="btn btn-secondary mt-4">Добавить преимущество</button>
-								</div>
-							</div>
-							<div class="col" v-if="preimush.length > 0">
-								<div class="text-center">
-									<button v-on:click="deletePreimush" type="submit" class="btn btn-secondary mt-4">Удалить преимущество</button>
-								</div>
-							</div>
-						</div>
+						<textarea style="width:auto" v-model="itemAbout" class="form-control" placeholder="Описание товара" type="text"></textarea>
 					</div>
-					<div>
-						<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">РАЗМЕРЫ И КОЛИЧЕСТВО</h3>
-						<div class="row ml-1">
-							<div class="col-4 col-md-2 text-center  mt-2" v-for="(size, index) in Object.keys(sizes)">
-								<a class="razmer__sneakers" style="font-size: 14px;background: #7aaae0;color: white;padding: 3px 7px 3px 7px;font-size:20px;" href="#">{{ size }}</a>
+					<div class="input-group input-group-alternative text-center mt-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
+						</div>
+						<input v-model="itemPrice" class="form-control" placeholder="Цена в рублях" type="number">
+					</div>
+				</div>
+				<div>
+					<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">ФОТО</h3>
+					<div class="row">
+						<div class="col-12 col-md-4">
+							<div class="text-center">
+								<input type="file" style="display:none;" ref="fileInputImage_1" v-on:change="isFileSelected(0, $event)" />
+								<button v-on:click="$refs.fileInputImage_1.click()" name="fd" type="button" class="btn btn-danger mt-4">Добавить первое фото</button>
+							</div>
+						</div>
+						<div class="col-12 col-md-4">
+							<div class="text-center">
+								<input type="file" style="display:none;" ref="fileInputImage_2" v-on:change="isFileSelected(1, $event)" />
+								<button v-on:click="$refs.fileInputImage_2.click()" type="submit" class="btn btn-danger mt-4">Добавить второе фото</button>
+							</div>
+						</div>
+						<div class="col-12 col-md-4">
+							<div class="text-center">
+								<input type="file" style="display:none;" ref="fileInputImage_3" v-on:change="isFileSelected(2, $event)" />
+								<button v-on:click="$refs.fileInputImage_3.click()" type="submit" class="btn btn-danger mt-4">Добавить третье фото</button>
+							</div>
+						</div>
+						<div class="col-12 mt-3">
+							<h3 class="text-center">Или введите ссылку на изображение</h3>
+						</div>
 
-								<input v-model="Object.values(sizes)[index]" v-on:change="inputSizeChange(size, $event.target.value)" class="form-control mt-1" min="0" value="0" placeholder="Кол-во" type="number">
+						<div class="col-12 col-md-4">
+							<input v-model="itemImageLink[0]" class="form-control" placeholder="Введите ссылку на главное изображение" type="text">
+						</div>
+						<div class="col-12 col-md-4">
+							<input v-model="itemImageLink[1]" class="form-control" placeholder="Введите ссылку на второе изображение" type="text">
+						</div>
+						<div class="col-12 col-md-4">
+							<input v-model="itemImageLink[2]" class="form-control" placeholder="Введите ссылку на третье изображение" type="text">
+						</div>
+					</div>
+					<div class="row mt-3" id="preimush">
+						<div class="col-12 mt-3">
+							<h3 class="text-center">Преимущества</h3>
+						</div>
+						<div class="col-12 mt-2" v-for="(item, index) in preimush">
+							<div class="input-group input-group-alternative text-center">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-angle-double-right"></i></span>
+								</div>
+								<input class="form-control" v-model="item" v-on:change="inputPreimushChange((index + 1), $event.target.value)" placeholder="Введите преимущество" type="text">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="text-center">
+								<button v-on:click="addPrimush" type="submit" class="btn btn-secondary mt-4">Добавить преимущество</button>
+							</div>
+						</div>
+						<div class="col" v-if="preimush.length > 0">
+							<div class="text-center">
+								<button v-on:click="deletePreimush" type="submit" class="btn btn-secondary mt-4">Удалить преимущество</button>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div>
+					<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">РАЗМЕРЫ И КОЛИЧЕСТВО</h3>
+					<div class="row ml-1">
+						<div class="col-4 col-md-2 text-center  mt-2" v-for="(size, index) in Object.keys(sizes)">
+							<a class="razmer__sneakers" style="font-size: 14px;background: #7aaae0;color: white;padding: 3px 7px 3px 7px;font-size:20px;" href="#">{{ size }}</a>
+
+							<input v-model="Object.values(sizes)[index]" v-on:change="inputSizeChange(size, $event.target.value)" class="form-control mt-1" min="0" value="0" placeholder="Кол-во" type="number">
+						</div>
+					</div>
+				</div>
+				<div>
+					<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">КАТЕГОРИЯ</h3>
+					<div class="row ml-1">
+						<select v-model="selectedCategory">
+							<option  disabled value="">Выберите один из вариантов</option>
+							<option v-for="category in categories" :value="category.id">{{category}}</option>
+						</select>
+					</div>
+					<h3 v-for="category in categories">123</h3>
+				</div>
+			</div>
 
 
 				<div class="row mt-2" style="border-top: 1.2px #808080 solid">
@@ -126,6 +136,9 @@
 				itemAbout: '',
 				itemPrice: 0.0,
 
+				categories: [],
+				selectedCategory: '',
+
 				itemImages: [],
 				itemImageLink: ['', '' ,''],
 
@@ -136,9 +149,19 @@
 
 			},
 			watch: {
-				itemImageLink: function () {
-					console.log(this.itemImageLink);
-				}
+
+			},
+			mounted() {
+				$.ajax({
+					type: 'GET',
+					url: '/Admin/GetAllCaregories',
+					success: function (res) {
+						this.categories = res;
+						this.categories.push('123');
+						console.log(this.categories);
+
+					}
+				});
 			},
 			methods: {
 				addPrimush: function () {
@@ -165,7 +188,7 @@
 						ItemPreimush: this.preimush,
 						ItemSizes: this.sizes,
 						ItemImagesLinks: this.itemImageLink
-											
+					
 					}
 					$.ajax({
 						method: 'POST',

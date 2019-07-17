@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using e_commerce_project.Hubs;
 using e_commerce_project.Models;
 using e_commerce_project.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +30,10 @@ namespace e_commerce_project
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddSignalR(hubOptions => {
+				hubOptions.EnableDetailedErrors = true;
+				hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
+			});
 			services.Configure<CookiePolicyOptions>(options =>
 			{
 				// This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -44,6 +49,8 @@ namespace e_commerce_project
 				.AddDefaultTokenProviders();
 
 			services.AddScoped<IAdminRepository, AdminRepository>();
+			services.AddScoped<ICategoryRepository, CategoryRepository>();
+			services.AddScoped<IShopRepository, ShopRepository>();
 
 
 			services.ConfigureApplicationCookie(options =>
@@ -87,6 +94,11 @@ namespace e_commerce_project
 			app.UseCookiePolicy();
 
 			app.UseAuthentication();
+
+			app.UseSignalR(routes =>
+			{
+				routes.MapHub<ChatHub>("/chat");
+			});
 
 			app.UseMvc(routes =>
 			{

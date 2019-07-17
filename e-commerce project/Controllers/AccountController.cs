@@ -23,6 +23,11 @@ namespace e_commerce_project.Controllers
 			this.userManager = userManager;
 			this.roleManager = roleManager;
 		}
+		[HttpGet]
+		public IActionResult ChatPage()
+		{
+			return View();
+		}
 		public IActionResult Profile()
 		{
 			if (User.Identity.IsAuthenticated)

@@ -79,12 +79,12 @@
 						</div>
 						<p class="item__price mt-1 pb-2 pb-md-0">
 							<strike v-if="item.discount != 0" class="strile__old_price">{{ item.price | moneyFormat}} руб</strike> &nbsp;
-							<span v-if="item.discount != 0" v- class="price_with_sale">{{ (item.price * ( 100 - item.discount) / 100).toFixed() | moneyFormat }} руб</span>
-							<span v-else="item.discount != 0" v- class="price__discountnone">{{ item.price | moneyFormat }} руб</span>
+							<span v-if="item.discount != 0" class="price_with_sale">{{ (item.price * ( 100 - item.discount) / 100).toFixed() | moneyFormat }} руб</span>
+							<span v-else="item.discount != 0" class="price__discountnone">{{ item.price | moneyFormat }} руб</span>
 						</p>
 						<div class="row mb-2">
 							<div class="col-12 justify-content-center mt-md-2">
-								<a href="#" class="item__btn__info">КУПИТЬ</a>
+								<a v-on:click="buyItem(item.id)" class="item__btn__info">КУПИТЬ</a>
 								<a href="#">
 									<i class="ml-3 fa fa-heart item__fa"></i>
 								</a>
@@ -127,7 +127,7 @@
 				pageIsLoad: false,
 
 				priceFilterMin: 0,
-				priceFilterMax: 0,
+				priceFilterMax: 15000,
 
 				sizeFilter: [],
 				sizeFilterActive: [],
@@ -172,15 +172,15 @@
 
 					this.items.forEach((element, index) => {
 						let filterPrice = false;
-						let itemPrice;
+						let itemPrice = 0;
 						if (element.discount == 0) {
 							itemPrice = element.price;
 						}
 						else {
+							console.log(element);
 							itemPrice = element.price * element.discount / 100;
 						}
-						console.log(itemPrice);
-						if (itemPrice <= this.priceFilterMax && itemPrice >= this.priceFilterMin) {
+						if (itemPrice < this.priceFilterMax && itemPrice > this.priceFilterMin) {
 							filterPrice = true;
 						}
 
@@ -192,15 +192,16 @@
 							}
 						}
 						if (countSizesFilter != sizeIsFind || !filterPrice) {
-							this.itemFilterIsShow[index] = 0;
+							shop.$set(shop.itemFilterIsShow, index, 0);
 						}
 						else {
-							this.itemFilterIsShow[index] = 1;
+							shop.$set(shop.itemFilterIsShow, index, 1);
 						}
-						this.itemFilterIsShow.push(1);
-						this.itemFilterIsShow.pop();
 					})
 					this.pageIsLoad = false;
+				},
+				buyItem: function (id) {
+					window.location.replace('/Shop/Info?itemId=' + id);
 				}
 			},
 			filters: {
