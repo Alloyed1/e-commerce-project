@@ -114,6 +114,15 @@
 					</div>
 				</div>
 			</div>
+			<div>
+				<h3 class="text-center pt-3" style="border-top: 1.2px #808080 solid">КАТЕГОРИЯ</h3>
+				<div class="row ml-1">
+					<select v-model="selectedCategoryName" v-on:change="categoryChange($event)" class="selet_size" style="width:100%">
+						<option disabled value="">Выберите один из вариантов</option>
+						<option v-for="category in categories"  :value="category.categoryName">{{category.categoryName}}</option>
+					</select>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -126,6 +135,10 @@
 				itemName: '',
 				itemAbout: '',
 				itemPrice: 0.0,
+
+				categories: [],
+				selectedCategoryId: 0,
+				selectedCategoryName: '',
 
 				itemImageLink: [],
 				itemImages: [],
@@ -140,21 +153,12 @@
 
 			},
 			mounted() {
-				@*axios.get('/Admin/GetItemInShop?id=' + @Model)
-					.then(res => {
-						this.itemName = res.data.name;
-						this.itemAbout = res.data.about;
-						this.itemPrice = parseInt(res.data.price, 10);
-						this.preimush = res.data.advantagesArray;
-						this.sizes = res.data.sizesDictionary;
-						this.itemId = parseInt(res.data.id, 10);
-						this.itemImageLink = res.data.itemImagesLinks;
-						console.log(res.data);
-					});*@
 				$.ajax({
 					type: 'GET',
 					url: '/Admin/GetItemInShop?id=' + @Model,
+					async: true,
 					success: (res) => {
+						console.log(res);
 						this.itemName = res.name;
 						this.itemAbout = res.about;
 						this.itemPrice = parseInt(res.price, 10);
@@ -162,6 +166,18 @@
 						this.sizes = res.sizesDictionary;
 						this.itemId = parseInt(res.id, 10);
 						this.itemImageLink = res.itemImagesLinks;
+						this.selectedCategoryId = res.category.id;
+						this.selectedCategoryName = res.category.categoryName;
+					}
+				});
+				$.ajax({
+					type: 'GET',
+					url: '/Admin/GetAllCaregories',
+					async: true,
+					success: (res) => {
+						this.categories = res;
+						console.log(this.categories);
+
 					}
 				});
 			},
@@ -174,6 +190,9 @@
 				},
 				inputPreimushChange: function (number, value) {
 					this.preimush[number - 1] = value;
+				},
+				categoryChange: (event) =>  {
+					this.selectedCategoryId = event.target.value;
 				},
 				inputSizeChange: function (dictKey, value) {
 					this.sizes[dictKey] = parseInt(value);
@@ -190,13 +209,15 @@
 						ItemPreimush: this.preimush,
 						ItemSizes: this.sizes,
 						ItemId: this.itemId,
-						ItemImagesLinks: this.itemImageLink
+						ItemImagesLinks: this.itemImageLink,
+						ItemCategoryId: this.ItemCategoryId
 
 					}
 					$.ajax({
 						method: 'POST',
 						url: '/Admin/EditItem',
 						data: data,
+						async: true,
 						success: function () {
 							alert('Успешно');
 						}

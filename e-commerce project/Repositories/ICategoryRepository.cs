@@ -15,6 +15,7 @@ namespace e_commerce_project.Repositories
 	{
 		Task AddCategory(string categoryName);
 		Task<List<Category>> GetAllCaregories();
+		Task<Category> GetCategory(int categoryId);
 	}
 	public class CategoryRepository: ICategoryRepository
 	{
@@ -39,6 +40,15 @@ namespace e_commerce_project.Repositories
 				var query = "SELECT * FROM Categories";
 				var result = await dbDapper.QueryAsync<Category>(query);
 				return result.ToList();
+			}
+			
+		}
+		public async Task<Category> GetCategory(int categoryId)
+		{
+			using(IDbConnection dbDapper = new SqlConnection(connectionString))
+			{
+				var result = await dbDapper.QueryAsync<Category>("SELECT * FROM Categories WHERE Id = @categoryId", new { categoryId });
+				return result.FirstOrDefault();
 			}
 		}
 	}

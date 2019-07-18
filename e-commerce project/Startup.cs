@@ -47,9 +47,8 @@ namespace e_commerce_project
 				.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddEntityFrameworkStores<ApplicationContext>()
 				.AddDefaultTokenProviders();
-
-			services.AddScoped<IAdminRepository, AdminRepository>();
 			services.AddScoped<ICategoryRepository, CategoryRepository>();
+			services.AddScoped<IAdminRepository, AdminRepository>();
 			services.AddScoped<IShopRepository, ShopRepository>();
 
 

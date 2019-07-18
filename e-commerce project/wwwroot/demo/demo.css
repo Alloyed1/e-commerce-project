@@ -23,6 +23,13 @@
 	background: #7aaae0;
 	padding: 10px 15px 10px 15px;
 }
+.selet_size {
+	height: 45px;
+	background: #949494;
+	text-indent: 3%;
+	font-size: 15px;
+	border: none;
+}
 .a__adminpanel:hover {
 	text-decoration: none;
 	color: black;

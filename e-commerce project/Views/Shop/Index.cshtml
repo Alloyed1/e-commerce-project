@@ -25,9 +25,11 @@
 
 					<div class="col-12  pb-4" style="border-bottom: 1px #bfbfbf solid;">
 						<h4>Категории</h4>
-						<a href="#" class="category__item">Adidas</a><br />
-						<a href="#" class="category__item">Nike</a><br />
-						<a href="#" class="category__item">Puma</a>
+						<template v-for="categor in itemCategories">
+							<a v-on:click="categorAddFilter(categor, $event)" href="#" v-bind:class="(itemCategoriesActive.indexOf(categor) != -1) ? 'category-active' : ''" class="category__item">{{categor}}</a>
+							<br />
+						</template>
+						
 						
 					</div>
 				</div>
@@ -51,19 +53,17 @@
 			</div>
 			<div class="col-12 col-md-9">
 				<div class="row">
-					<div class="col-12 pt-2 pb-2 d-flex" style="border-bottom: 1px #bfbfbf solid;border-top: 1px #bfbfbf solid;">
-						<p>Вы видите 12 товаров из 200</p>
-						<div class="ml-auto d-flex my-auto">
+					<div class="col-12 pt-2 pb-2 d-flex align-items-center" style="border-bottom: 1px #bfbfbf solid;border-top: 1px #bfbfbf solid;">
+						<p>Вы видите 12 товаров из {{ items.length}}</p>
+						<div class="ml-auto d-flex align-items-center">
 							<p>Выберите</p>
-							<input type="number" style="width:50px;" value="" />
+							<input type="number" style="width:50px;background:#bfbfbf;border:none;" value="" />
 						</div>
 					</div>
 					<div class="col-12 d-flex justify-content-center" style="border-bottom: 1px #bfbfbf solid;">
-						<a class="a__item__page back" href="#"><i class="fa fa-angle-left"></i></a>
-						<a class="a__item__page" href="#">1</a>
-						<a class="a__item__page" href="#">2</a>
-						<a class="a__item__page" href="#">3</a>
-						<a class="a__item__page prev" href="#"><i class="fa fa-angle-right"></i></a>
+						<a v-on:click.prevent="pagePrev" class="a__item__page back" href="#"><i class="fa fa-angle-left"></i></a>
+						<a v-for="page in pagesNumbers" v-on:click.prevent="pageActiveNumber = page" class="a__item__page" v-bind:class="(page == pageActiveNumber) ? 'a__item__page_active': ''" href="#">{{page}}</a>
+						<a v-on:click.prevent="pageNext" class="a__item__page prev" href="#"><i class="fa fa-angle-right"></i></a>
 					</div>
 				</div>
 				<div class="row justify-content-center" v-if="!pageIsLoad">
@@ -96,7 +96,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row justify-content-center" style="height:450px;" v-else="">
+				<div class="row justify-content-center" style="height:450px;" v-else>
 					<div class="spinner-border text-success my-auto " style="width: 5rem; height: 5rem; font-size:25px;" role="status">
 						<span class="sr-only">Loading...</span>
 					</div>
@@ -113,7 +113,7 @@
         max: 15000,
         from: 1,
         to: 15000,
-			grid: true,
+		grid: true,
 		onChange: function (data) {
 			shop.priceFilterMin = data.from;
 			shop.priceFilterMax = data.to;
@@ -131,6 +131,12 @@
 
 				sizeFilter: [],
 				sizeFilterActive: [],
+
+				itemCategories: [],
+				itemCategoriesActive: [],
+
+				pagesNumbers: [],
+				pageActiveNumber: 1
 			},
 			mounted() {
 				this.pageIsLoad = true;
@@ -141,6 +147,12 @@
 					success: (res) => {
 						this.items = res;
 
+						let count = Math.ceil(res.length / 12);
+						for (var i = 1; i != count + 1; i++) {
+							this.pagesNumbers.push(i);
+						}
+
+
 						res.forEach((element) => {
 							this.itemFilterIsShow.push(1);
 							var sizes = [];
@@ -150,6 +162,10 @@
 									this.sizeFilter.push(size);
 								}
 							}
+							if (this.itemCategories.indexOf(element.category.categoryName) == -1) {
+								this.itemCategories.push(element.category.categoryName);
+							}
+
 						});
 					}
 				});
@@ -165,6 +181,15 @@
 						this.sizeFilterActive.push(size);
 					}
 
+				},
+				categorAddFilter: function (categor, event) {
+					event.preventDefault();
+					if (this.itemCategoriesActive.indexOf(categor) != -1) {
+						this.itemCategoriesActive.splice(this.itemCategoriesActive.indexOf(categor), 1);
+					}
+					else {
+						this.itemCategoriesActive.push(categor);
+					}
 				},
 				applyFilters: function (event) {
 					this.pageIsLoad = true;
@@ -191,7 +216,14 @@
 								sizeIsFind++;
 							}
 						}
-						if (countSizesFilter != sizeIsFind || !filterPrice) {
+
+						let categorFiler = false;
+						if (this.itemCategoriesActive.indexOf(element.category.categoryName) != -1 || this.itemCategoriesActive.length == 0) {
+							categorFiler = true;
+						}
+						
+
+						if (countSizesFilter != sizeIsFind || !filterPrice || !categorFiler) {
 							shop.$set(shop.itemFilterIsShow, index, 0);
 						}
 						else {
@@ -199,6 +231,22 @@
 						}
 					})
 					this.pageIsLoad = false;
+				},
+				pagePrev: function ()  {
+					if (this.pageActiveNumber == 1) {
+						this.pageActiveNumber = this.pagesNumbers[this.pagesNumbers.length - 1];
+					}
+					else {
+						this.pageActiveNumber--;
+					}
+				},
+				pageNext: function () {
+					if (this.pageActiveNumber == this.pagesNumbers[this.pagesNumbers.length - 1]) {
+						this.pageActiveNumber = 1;
+					}
+					else {
+						this.pageActiveNumber++;
+					}
 				},
 				buyItem: function (id) {
 					window.location.replace('/Shop/Info?itemId=' + id);

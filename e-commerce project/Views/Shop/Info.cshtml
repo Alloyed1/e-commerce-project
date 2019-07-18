@@ -14,14 +14,20 @@
 					</div>
 				</div>
 				<div class="col-12 col-md-6 mt-4 mt-md-0 rounded" style="background:#efefef">
-					<h1>{{item.name.toUpperCase()}}</h1>
+					<h1 class="text-center">{{item.name.toUpperCase()}}</h1>
 					<p>Номер продукта: {{item.id}}</p>
 					<hr />
-					<div class="col-12">
-						<h4 class="item__price mt-1 pb-2 pb-md-0">
-							{{ item.price | moneyFormat}} руб
-						</h4>
+					<div class="d-flex align-items-center">
+						<div class="col-6 text-left">
+							<h4 class="item__price mt-1 pb-2 pb-md-0">
+								{{ item.price | moneyFormat }} руб
+							</h4>
+						</div>
+						<div class="col-6 text-center ">
+							<p>Продано товара: {{item.countOfPurchases}}</p>
+						</div>
 					</div>
+					
 					<select  v-on:change="changeSize($event)" class="mt-3 selet_size" style="width:100%">
 						<template v-for="(size,index) in Object.keys(item.sizesDictionary)">
 							<option :value="index" v-if="Object.values(item.sizesDictionary)[index] != 0">{{size}} &nbsp; (ОСТАЛОСЬ: {{Object.values(item.sizesDictionary)[index]}})</option>
@@ -96,10 +102,25 @@
 					</div>
 				</div>
 			</div>
+			<div class="row mt-5 pb-4" style="background:#efefef">
+				<div class="col-12 text-center">
+					<h2>ОТЗЫВЫ</h2>
+
+					<div class="col-12 d-flex test">
+						<div class="text-left test">
+							<img style="width: 19%; height: 100%" class="img-fluid" src="https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Account-512.png" alt="" />
+							<p>Мохов Евгений</p>
+						</div>
+						<p class="text-left test">Мне очень понравился товар, но порекомендовать я его не могу, потому что он сломался</p>
+					</div>
+				</div>
+			</div>
+		
 	</div>
 </div>
 @section Scripts{ 
 <script type="text/javascript">
+
 	var item__main = new Vue({
 		el: '#item__info',
 		data: {
@@ -118,6 +139,7 @@
 				type: 'GET',
 				url: '/Shop/GetItemInShop',
 				data: data,
+				async: true,
 				success: (res) => {
 					console.log(res);
 					this.item = res;
@@ -135,7 +157,28 @@
 				this.sizeAvailable = Object.values(this.item.sizesDictionary)[event.target.value];
 			}
 
-		}
+		},
+		filters: {
+				moneyFormat: function (value) {
+					var mass = value.toString().split("").reverse();
+					var mass2 = [];
+					let j = 0;
+					for (var i = 0; i < value.toString().length; i++) {
+						if (j == 3) {
+							mass2.push('.');
+							mass2.push(mass[i]);
+
+							j = 1;
+						}
+						else {
+							mass2.push(mass[i]);
+							j++;
+						}
+					}
+					return mass2.reverse().join("");
+
+				}
+			}
 	});
 </script>
 }

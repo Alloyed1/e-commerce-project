@@ -49,8 +49,8 @@ namespace e_commerce_project.Controllers
 			return await categoryRepository.GetAllCaregories();
 		}
 
-		[HttpPost]
-		public async Task AddItemInShop(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks)
+		[HttpPut]
+		public async Task AddItemInShop(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks, string ItemCategoryId)
 		{
 			Item item = new Item();
 			item.Name = Name;
@@ -61,7 +61,7 @@ namespace e_commerce_project.Controllers
 			item.Discount = 0;
 			item.AddItemTime = DateTime.Now;
 			item.ItemImagesLinks = JsonConvert.SerializeObject(ItemImagesLinks);
-
+			item.CategoryId = Convert.ToInt32(ItemCategoryId);
 			await adminRepository.AddItem(item);
 		}
 		[HttpGet]
@@ -95,7 +95,7 @@ namespace e_commerce_project.Controllers
 			return View(itemId);
 		}
 		[HttpPost]
-		public async Task EditItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string ItemId, string[] ItemImagesLinks)
+		public async Task EditItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string ItemId, string[] ItemImagesLinks, string ItemCategoryId)
 		{
 			Item item = new Item();
 			item.Name = Name;
@@ -106,6 +106,7 @@ namespace e_commerce_project.Controllers
 			item.Discount = 0;
 			item.AddItemTime = DateTime.Now;
 			item.Id = Convert.ToInt32(ItemId);
+			item.CategoryId = Convert.ToInt32(ItemCategoryId);
 			item.ItemImagesLinks = JsonConvert.SerializeObject(ItemImagesLinks);
 
 			await adminRepository.EditItem(item);

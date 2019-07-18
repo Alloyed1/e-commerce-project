@@ -26,29 +26,31 @@ namespace e_commerce_project.Repositories
 	public class AdminRepository: IAdminRepository
 	{
 		string connectionString;
-		public AdminRepository(IConfiguration configuration)
+		ICategoryRepository categoryRepository;
+		public AdminRepository(IConfiguration configuration, ICategoryRepository categoryRepository)
 		{
 			connectionString = configuration.GetConnectionString("DefaultConnection");
+			this.categoryRepository = categoryRepository;
 		}
 
 		public async Task AddItem(Item item)
 		{
 			using(IDbConnection dbDapper = new SqlConnection(connectionString))
 			{
-				var query = "INSERT INTO Items (Name, Price, About,CountOfPurchases, AddItemTime, SizesDictionary, AdvantagesArray, Discount, ItemImagesLinks)" +
-					" VALUES (@Name, @Price, @About,@CountOfPurchases, @AddItemTime, @SizesDictionary, @AdvantagesArray, @Discount, @ItemImagesLinks);" +
+				var query = "INSERT INTO Items (Name, Price, About,CountOfPurchases, AddItemTime, SizesDictionary, AdvantagesArray, Discount, ItemImagesLinks, CategoryId)" +
+					" VALUES (@Name, @Price, @About,@CountOfPurchases, @AddItemTime, @SizesDictionary, @AdvantagesArray, @Discount, @ItemImagesLinks, @CategoryId);" +
 				"SELECT CAST(SCOPE_IDENTITY() as int)";
 
-				await dbDapper.ExecuteAsync(query, new { item.Name, item.Price, item.About, item.CountOfPurchases, item.AddItemTime, item.SizesDictionary, item.AdvantagesArray, item.Discount, item.ItemImagesLinks});
+				await dbDapper.ExecuteAsync(query, new { item.Name, item.Price, item.About, item.CountOfPurchases, item.AddItemTime, item.SizesDictionary, item.AdvantagesArray, item.Discount, item.ItemImagesLinks, item.CategoryId });
 			}
 		}
 		public async Task EditItem(Item item)
 		{
 			using (IDbConnection dbDapper = new SqlConnection(connectionString))
 			{
-				var query = "UPDATE Items SET Name = @Name, Price = @Price, About = @About, CountOfPurchases = @CountOfPurchases, AddItemTime = @AddItemTime, SizesDictionary = @SizesDictionary, ItemImagesLinks = @ItemImagesLinks WHERE Id = @Id";
+				var query = "UPDATE Items SET Name = @Name, Price = @Price, About = @About, CountOfPurchases = @CountOfPurchases, AddItemTime = @AddItemTime, SizesDictionary = @SizesDictionary, ItemImagesLinks = @ItemImagesLinks, CategoryId = @CategoryId WHERE Id = @Id";
 
-				await dbDapper.ExecuteAsync(query, new { item.Name, item.Id, item.Price, item.About, item.CountOfPurchases, item.AddItemTime, item.SizesDictionary, item.ItemImagesLinks});
+				await dbDapper.ExecuteAsync(query, new { item.Name, item.Id, item.Price, item.About, item.CountOfPurchases, item.AddItemTime, item.SizesDictionary, item.ItemImagesLinks, item.CategoryId});
 			}
 		}
 		public async Task<List<ItemShopViewModel>> GetAllItems()
@@ -57,6 +59,8 @@ namespace e_commerce_project.Repositories
 			{
 				var result = await dbDapper.QueryAsync<Item>("SELECT * FROM Items");
 				List<Item> items = result.ToList();
+
+				List<Category> categories = await categoryRepository.GetAllCaregories();
 
 
 				List<ItemShopViewModel> itemShopList = new List<ItemShopViewModel>();
@@ -72,6 +76,7 @@ namespace e_commerce_project.Repositories
 					itemShop.Category = item.Category;
 					itemShop.IsDelete = item.IsDelete;
 					itemShop.IsHide = item.IsHide;
+					itemShop.Category = categories.Where(i => i.Id == Convert.ToInt32(item.CategoryId)).FirstOrDefault();
 					itemShop.SizesDictionary = JsonConvert.DeserializeObject<Dictionary<int, int>>(item.SizesDictionary);
 					itemShop.AdvantagesArray = JsonConvert.DeserializeObject<string[]>(item.AdvantagesArray);
 					itemShop.ItemImagesLinks = JsonConvert.DeserializeObject<string[]>(item.ItemImagesLinks);
@@ -97,7 +102,7 @@ namespace e_commerce_project.Repositories
 				itemShop.Price = item.Price;
 				itemShop.Discount = item.Discount;
 				itemShop.Brand = item.Brand;
-				itemShop.Category = item.Category;
+				itemShop.Category = await categoryRepository.GetCategory(Convert.ToInt32(item.CategoryId));
 				itemShop.IsDelete = item.IsDelete;
 				itemShop.IsHide = item.IsHide;
 				itemShop.SizesDictionary = JsonConvert.DeserializeObject<Dictionary<int, int>>(item.SizesDictionary);
