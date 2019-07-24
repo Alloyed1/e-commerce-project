@@ -1,4 +1,4 @@
-﻿let hubUrlNotify = 'https://localhost:5001/chat';
+﻿let hubUrlNotify = '/chat';
 		const hubConnectionNotify = new signalR.HubConnectionBuilder()
 			.withUrl(hubUrlNotify)
             .configureLogging(signalR.LogLevel.Information)

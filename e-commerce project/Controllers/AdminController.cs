@@ -23,6 +23,22 @@ namespace e_commerce_project.Controllers
 			this.adminRepository = adminRepository;
 			this.categoryRepository = categoryRepository;
 		}
+
+		[NonAction]
+		private Item ConvertViewModelToItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks, string ItemCategoryId)
+		{
+			Item item = new Item();
+			item.Name = Name;
+			item.About = About;
+			item.Price = Convert.ToDouble(Price);
+			item.AdvantagesArray = JsonConvert.SerializeObject(ItemPreimush);
+			item.SizesDictionary = JsonConvert.SerializeObject(ItemSizes);
+			item.Discount = 0;
+			item.AddItemTime = DateTime.Now;
+			item.ItemImagesLinks = JsonConvert.SerializeObject(ItemImagesLinks);
+			item.CategoryId = Convert.ToInt32(ItemCategoryId);
+			return item;
+		}
 		public IActionResult Index()
 		{
 			return View();
@@ -52,17 +68,7 @@ namespace e_commerce_project.Controllers
 		[HttpPut]
 		public async Task AddItemInShop(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks, string ItemCategoryId)
 		{
-			Item item = new Item();
-			item.Name = Name;
-			item.About = About;
-			item.Price = Convert.ToDouble(Price);
-			item.AdvantagesArray = JsonConvert.SerializeObject(ItemPreimush);
-			item.SizesDictionary = JsonConvert.SerializeObject(ItemSizes);
-			item.Discount = 0;
-			item.AddItemTime = DateTime.Now;
-			item.ItemImagesLinks = JsonConvert.SerializeObject(ItemImagesLinks);
-			item.CategoryId = Convert.ToInt32(ItemCategoryId);
-			await adminRepository.AddItem(item);
+			await adminRepository.AddItem(ConvertViewModelToItem(Name, About, Price, ItemSizes, ItemPreimush, ItemImagesLinks, ItemCategoryId));
 		}
 		[HttpGet]
 		public async Task<List<ItemShopViewModel>> GetAllItemsInShop()
@@ -97,19 +103,7 @@ namespace e_commerce_project.Controllers
 		[HttpPost]
 		public async Task EditItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string ItemId, string[] ItemImagesLinks, string ItemCategoryId)
 		{
-			Item item = new Item();
-			item.Name = Name;
-			item.About = About;
-			item.Price = Convert.ToDouble(Price);
-			item.AdvantagesArray = JsonConvert.SerializeObject(ItemPreimush);
-			item.SizesDictionary = JsonConvert.SerializeObject(ItemSizes);
-			item.Discount = 0;
-			item.AddItemTime = DateTime.Now;
-			item.Id = Convert.ToInt32(ItemId);
-			item.CategoryId = Convert.ToInt32(ItemCategoryId);
-			item.ItemImagesLinks = JsonConvert.SerializeObject(ItemImagesLinks);
-
-			await adminRepository.EditItem(item);
+			await adminRepository.EditItem(ConvertViewModelToItem(Name, About, Price, ItemSizes, ItemPreimush, ItemImagesLinks, ItemCategoryId));
 		}
 
 	}

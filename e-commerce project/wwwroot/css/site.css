@@ -11,10 +11,18 @@ body {
 a, p, div, img, form, button{
 	box-sizing:border-box;
 }
+p, h1, h2, h3, h4, h5, h6{
+	padding: 0;
+	margin: 0;
+}
 
 a {
 	text-decoration: none;
 	color: black;
+}
+.sizesDiv{
+	width: 100%;
+	flex-wrap: wrap;
 }
 
 	a:hover {
@@ -60,6 +68,30 @@ a {
 	box-shadow: 0 0 10px rgba(0,0,0,0.8);
 	font-size: 19px !important;
 }
+.favorite_block{
+	transition: all 0.2s ease;
+}
+.favorite_block:hover{
+	box-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+.icon_times{
+	font-size: 25px;
+	transition: all 0.2s ease;
+}
+.icon_times:hover{
+	transform: scaleX(1.4) scaleY(1.4);
+}
+.deleteFromFavorite{
+	padding: 10px 22px;
+	margin-bottom: 12px;
+	border: 1.7px solid #c32900;
+	transition: all 0.3s ease;
+}
+.deleteFromFavorite:hover{
+	background: #c32900;
+	color:white;
+	box-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
 
 .header__info {
 	background: #f2f4f6;
@@ -71,6 +103,7 @@ a {
 	padding: 3px 7px 3px 7px;
 	transition: all 0.27s ease;
 }
+
 
 	.razmer__sneakers__filer:hover {
 		box-shadow: 0 0 10px rgba(0,0,0,0.8);
@@ -118,8 +151,9 @@ a {
 }
 .price__discountnone {
 	font-size: 25px;
-	color: #a7171a;
+	color: #161616
 }
+
 
 .item__tittle {
 	padding-bottom: 1rem;
@@ -363,7 +397,27 @@ p{
 	background: #8e1416;
 	color: white;
 }
-.a_buyyandex{
+.otziv{
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+	.otziv:hover {
+		box-shadow: 0 0 3px rgba(0,0,0,0.2);
+	}
+.hr{
+}
+.buy_button {
+	padding: 14px 23px;
+	background: #0273c8;
+	color: white;
+	transition: all 0.2s ease;
+}
+	.buy_button:hover {
+		background: #0557b4;
+		color: white;
+		box-shadow: 0 0 6px rgba(0,0,0,0.2);
+	}
+.a_buyyandex {
 	background: #ffac00;
 	padding: 10px 12px 10px 12px;
 	transition: all 0.23s ease;
@@ -385,11 +439,25 @@ p{
 		padding: 13px 30px 13px 30px;
 	}
 }
+@media only screen and (max-width: 768px) {
+	.info_item_name {
+		font-size: 34px;
+	}
+}
+@media only screen and (min-width: 768px) {
+
+	.row-stat-basket {
+		position: fixed;
+	}
+}
 
 @media only screen and (max-width: 992px) {
 	.header__slider_a {
 		padding: 11px 25px 11px 25px;
 		font-size: 11px;
+	}
+	.info_item_name{
+		font-size: 29px;
 	}
 	.footer__icon {
 		font-size: 25px;

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using e_commerce_project.Models;
 using e_commerce_project.Repositories;
 using e_commerce_project.ViewModel.Account;
+using e_commerce_project.ViewModel.Shop;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -18,7 +20,7 @@ namespace e_commerce_project.Controllers
 			this.shopRepository = shopRepository;
 		}
 		[HttpGet]
-		public IActionResult Index ()
+		public IActionResult Index()
 		{
 			return View();
 		}
@@ -28,9 +30,48 @@ namespace e_commerce_project.Controllers
 			return View(itemId);
 		}
 		[HttpGet]
+		public IActionResult Favorite()
+		{
+			return View();
+		}
+		[HttpGet]
+		public async Task<List<ItemShopViewModel>> GetFavoriteList(string userEmail)
+		{
+			return await shopRepository.GetFavoriteList(userEmail);
+		}
+		[HttpDelete]
+		public async Task DeleteFromFavorite(string userEmail, int itemId) {
+			await shopRepository.DeleteFromFavorite(userEmail, itemId);
+		}
+		[HttpDelete]
+		public async Task DeleteFromBasket(string userEmail, int itemId)
+		{
+			await shopRepository.DeleteFromBasket(userEmail, itemId);
+		}
+		[HttpGet]
 		public async Task<ItemShopViewModel> GetItemInShop(int id)
 		{
 			return await shopRepository.GetItem(id);
+		}
+		[HttpPut]
+		public async Task<bool> AddToFavorite(int id, string userEmail)
+		{
+			return await shopRepository.AddToFavorit(userEmail, id);
+		}
+		[HttpPut]
+		public async Task<bool> AddToBasket(BasketViewModel model)
+		{
+			return await shopRepository.AddToBaskets("123", 1);
+		}
+		[HttpGet]
+		public async Task<List<ItemShopViewModel>> GetBasketList(string userEmail)
+		{
+			return await shopRepository.GetBasketList(userEmail);
+		}
+		[HttpGet]
+		public IActionResult Basket()
+		{
+			return View();
 		}
 	}
 }

@@ -54,7 +54,7 @@
 			<div class="col-12 col-md-9">
 				<div class="row">
 					<div class="col-12 pt-2 pb-2 d-flex align-items-center" style="border-bottom: 1px #bfbfbf solid;border-top: 1px #bfbfbf solid;">
-						<p>Вы видите 12 товаров из {{ items.length}}</p>
+						<p>Вы видите 12 товаров из {{ itemsIsShowCount }}</p>
 						<div class="ml-auto d-flex align-items-center">
 							<p>Выберите</p>
 							<input type="number" style="width:50px;background:#bfbfbf;border:none;" value="" />
@@ -67,12 +67,8 @@
 					</div>
 				</div>
 				<div class="row justify-content-center" v-if="!pageIsLoad">
-					<div class="col-12">
-
-					</div>
-					<div class="col-8 col-md-4 mt-3 card item__card text-center" v-for="(item, index) in items" v-if="item.isHide == 0 && item.isDelete == 0 && itemFilterIsShow[index] == 1 " style="border:none;">
+					<div class="col-6 col-md-4 mt-3 card item__card text-center" v-for="(item, index) in itemPages[pageActiveNumber - 1]" v-if="item.isHide == 0 && item.isDelete == 0 && itemFilterIsShow[index] == 1 " style="border:none;">
 						<img class="img-fluid card-img-top mx-auto mt-2" :src="item.itemImagesLinks[0]" alt="">
-
 						<p class="item__name">{{ item.name }}</p>
 						<div>
 							<a class="razmer__sneakers ml-1" v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-if="razmer > 0" v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''" href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
@@ -84,19 +80,26 @@
 						</p>
 						<div class="row mb-2">
 							<div class="col-12 justify-content-center mt-md-2">
-								<a v-on:click="buyItem(item.id)" class="item__btn__info">КУПИТЬ</a>
+								<a v-on:click.prevent="buyItem(item.id)" class="item__btn__info">КУПИТЬ</a>
 								<a href="#">
-									<i class="ml-3 fa fa-heart item__fa"></i>
+									<i class="ml-3 fa fa-heart item__fa" v-on:click.prevent="addToFavorite(item.id)"></i>
 								</a>
 								<a href="#">
-									<i class="ml-3 fa fa-shopping-cart item__fa"></i>
+									<i v-on:click.prevent="addToBasket(item.id)" class="ml-3 fa fa-shopping-cart item__fa"></i>
 								</a>
 
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row justify-content-center" style="height:450px;" v-else>
+				<div class="row mt-4 pb-3">
+					<div class="col-12 d-flex justify-content-center" style="border-bottom: 1px #bfbfbf solid;">
+						<a v-on:click.prevent="pagePrev" class="a__item__page back" href="#"><i class="fa fa-angle-left"></i></a>
+						<a v-for="page in pagesNumbers" v-on:click.prevent="pageActiveNumber = page" class="a__item__page" v-bind:class="(page == pageActiveNumber) ? 'a__item__page_active': ''" href="#">{{page}}</a>
+						<a v-on:click.prevent="pageNext" class="a__item__page prev" href="#"><i class="fa fa-angle-right"></i></a>
+					</div>
+				</div>
+				<div class="row justify-content-center" style="height:200px;" v-else>
 					<div class="spinner-border text-success my-auto " style="width: 5rem; height: 5rem; font-size:25px;" role="status">
 						<span class="sr-only">Loading...</span>
 					</div>
@@ -124,6 +127,7 @@
 			data: {
 				items: [],
 				itemFilterIsShow: [],
+				itemsIsShowCount: 0,
 				pageIsLoad: false,
 
 				priceFilterMin: 0,
@@ -136,7 +140,12 @@
 				itemCategoriesActive: [],
 
 				pagesNumbers: [],
-				pageActiveNumber: 1
+				pageActiveNumber: 1,
+
+				itemPages: []
+			},
+			watch: {
+				
 			},
 			mounted() {
 				this.pageIsLoad = true;
@@ -146,11 +155,10 @@
 					async: true,
 					success: (res) => {
 						this.items = res;
+						this.itemsIsShowCount = res.length;
 
-						let count = Math.ceil(res.length / 12);
-						for (var i = 1; i != count + 1; i++) {
-							this.pagesNumbers.push(i);
-						}
+
+						this.reloadPagesFilter();
 
 
 						res.forEach((element) => {
@@ -167,11 +175,40 @@
 							}
 
 						});
+						this.calculatedPages();
 					}
 				});
 				this.pageIsLoad = false;
 			},
 			methods: {
+				addToFavorite: function (id) {
+					$.ajax({
+						type: 'PUT',
+						url: '/Shop/AddToFavorite',
+						async: true,
+						data: {
+							id: id,
+							userEmail: '@User.Identity.Name'
+						},
+						success: (res) => {
+							console.log(res);
+						}
+					});
+				},
+				addToBasket: function (id) {
+					$.ajax({
+						type: 'PUT',
+						url: '/Shop/AddToBasket',
+						async: true,
+						data: {
+							id: id,
+							userEmail: '@User.Identity.Name'
+						},
+						success: (res) => {
+							console.log(res);
+						}
+					});
+				},
 				sizeAddFilter: function (size, event) {
 					event.preventDefault();
 					if (this.sizeFilterActive.indexOf(size) != -1) {
@@ -181,6 +218,36 @@
 						this.sizeFilterActive.push(size);
 					}
 
+				},
+				calculatedPages: function () {
+					var itemArray = [];
+					this.itemPages = [];
+					this.itemsIsShowCount = 0;
+
+					this.items.forEach(function (element, index) {
+						if (shop.itemFilterIsShow[index] == 1) {
+							itemArray.push(element);
+							shop.itemsIsShowCount++;
+						}
+					});
+					var items12 = null;
+					while (itemArray.length >= 12) {
+						items12 = itemArray.splice(0, 12);
+						shop.itemPages.push(items12);
+						console.log(itemArray.length);
+					}
+					if (itemArray.length > 0) {
+						items12 = itemArray.splice(0, itemArray.length);
+						shop.itemPages.push(items12);
+					}
+					console.log(shop.itemPages);
+				},
+				reloadPagesFilter: function () {
+					this.pagesNumbers.splice(0, this.pagesNumbers.length);
+					let count = Math.ceil(this.itemsIsShowCount / 12);
+					for (var i = 1; i != count + 1; i++) {
+						this.pagesNumbers.push(i);
+					}
 				},
 				categorAddFilter: function (categor, event) {
 					event.preventDefault();
@@ -205,7 +272,7 @@
 							console.log(element);
 							itemPrice = element.price * element.discount / 100;
 						}
-						if (itemPrice < this.priceFilterMax && itemPrice > this.priceFilterMin) {
+						if (itemPrice <= this.priceFilterMax && itemPrice >= this.priceFilterMin) {
 							filterPrice = true;
 						}
 
@@ -230,6 +297,9 @@
 							shop.$set(shop.itemFilterIsShow, index, 1);
 						}
 					})
+					this.calculatedPages();
+					this.reloadPagesFilter();
+					
 					this.pageIsLoad = false;
 				},
 				pagePrev: function ()  {

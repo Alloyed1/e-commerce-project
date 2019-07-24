@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewData["Title"] = "Favorite";
+}
+
+	<div class="favorite pb-5" id="favorite_main">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 mt-4 favorite_block" style="border: 2px solid black;" v-for="item in items" :id="item.id">
+					<div class="row">
+						<div class="col-8 offset-2 offset-md-0 col-md-3 mr-auto justify-content-center justify-content-md-start" >
+							<a class="" href="">
+									<img class="img-fluid rounded" :src="item.itemImagesLinks[0]" alt="">
+							</a>
+							
+						</div>
+						<div class="col">
+							<div class="d-flex align-items-center">
+								<h2>{{item.name}}</h2>
+								<a class="ml-auto" v-on:click.prevent="deleteFromFavorite(item.id)">
+									<i class="fa fa-times icon_times  text-danger" aria-hidden="true"></i>
+								</a>
+								
+							</div>
+							
+							<div class="favorite_block_size  mt-2">
+									<p>Размеры:</p>
+									<template v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-if="razmer > 0">
+											<a class="razmer__sneakers ml-1 favoritestyle_a"  v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''" href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
+									</template>
+									
+							</div>
+							<div class="">
+								<h4 class="mt-2">Описание:</h4>
+								<p class="ml-2">{{item.about}}</p>
+							</div>
+							
+							<div class="row mt-4 mt-md-5 pb-3">
+								<div class="col-12 text-center  text-md-right mr-3">
+									<a class="deleteFromFavorite" href="#">Добавить в корзину</a>
+									<a class="deleteFromFavorite" v-on:click="locationToShop(item.id)" href="#">В магазин</a>
+								</div>
+							</div>
+							
+							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+@section Scripts{ 
+<script type="text/javascript">
+	var favorite = new Vue({
+		el:'#favorite_main',
+		data: {
+			items: []
+		},
+		methods: {
+			locationToShop: function(id){
+				window.location.replace('/Shop/Info?itemId=' + id);
+			},
+			deleteFromFavorite: function(id){
+				var data = {
+					userEmail: '@User.Identity.Name',
+					itemId: id
+				}
+				$.ajax({
+					type:'DELETE',
+					url:'/Shop/DeleteFromFavorite',
+					data: data,
+					async: true,
+					success: () => {
+						$("body").overhang({
+							type: "info",
+							message: 'Товар успешно удалён',
+							duration: 0.85,
+							upper: false,
+						});
+						$('#' + id).remove();
+					}
+				});
+			}
+		},
+		mounted(){
+			$.ajax({
+				type:'GET',
+				url:'/Shop/GetFavoriteList',
+				async: true,
+				data:{
+					userEmail: '@User.Identity.Name'
+				},
+				success: (res) => {
+					this.items = res;
+					console.log(this.items);
+				}
+			});
+		}
+	});
+</script>
+}
+

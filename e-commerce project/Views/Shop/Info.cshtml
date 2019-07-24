@@ -4,135 +4,182 @@
 }
 <div id="item__info">
 	<div class="container">
-			<div class="row pt-5">
-				<div class="col-12 col-md-6 text-center">
-					<img style="height:500px;width:396px" class="img-fluid main-img-item rounded"  :src="mainImageUrl" alt="123" />
-					<div class="row mt-2 justify-content-center">
-						<div class="col-3 text-center" v-for="(image, index) in item.itemImagesLinks">
-							<img v-on:click="imageClick(index)"  class="img-fluid second__imd-item rounded"  :src="image" alt="" />
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-6 mt-4 mt-md-0 rounded" style="background:#efefef">
-					<h1 class="text-center">{{item.name.toUpperCase()}}</h1>
-					<p>Номер продукта: {{item.id}}</p>
-					<hr />
-					<div class="d-flex align-items-center">
-						<div class="col-6 text-left">
-							<h4 class="item__price mt-1 pb-2 pb-md-0">
-								{{ item.price | moneyFormat }} руб
-							</h4>
-						</div>
-						<div class="col-6 text-center ">
-							<p>Продано товара: {{item.countOfPurchases}}</p>
-						</div>
-					</div>
-					
-					<select  v-on:change="changeSize($event)" class="mt-3 selet_size" style="width:100%">
-						<template v-for="(size,index) in Object.keys(item.sizesDictionary)">
-							<option :value="index" v-if="Object.values(item.sizesDictionary)[index] != 0">{{size}} &nbsp; (ОСТАЛОСЬ: {{Object.values(item.sizesDictionary)[index]}})</option>
-						</template>
-						
-					</select>
-					<div class="row mt-2 pl-3 pr-3 align-items-center">
-						<div class="col-12 col-lg-3 d-flex align-items-center  text-center" style="background:#949494; width: auto">
-								<p>Кол-во</p>
-								<select class="selet_size ml-3">
-									<template v-for="i in sizeAvailable">
-										<option>{{i}}</option>
-									</template>
-									
-								</select>
-						</div>
-						<div class="col-12 mt-sm-2 mt-md-0 mr-auto col-md col-lg d-flex justify-content-center align-items-center">
-							<a class="addToCard_a">
-								<i class="fa fa-shopping-cart"></i>
-								ДОБАВИТЬ В КОРЗИНУ
-							</a>
-							<a class="a_buyyandex ml-1 d-flex align-items-center">
-								КУПИТЬ ЧЕРЕЗ
-								<i class="ml-1 fab fa-google-wallet" style="font-size: 15px;"></i>
-							</a>
-						</div>
-					</div>
-					<hr />
-					<div class="row align-items-center">
-						<div class="col-5 text-success d-flex align-items-center ml-4">
-							<i class="fa fa-check" aria-hidden="true"></i>
-							<p class="ml-4">Возврат</p>
-						</div>
-						<div class="col-5  d-flex align-items-center ml-4">
-							<i class="fa fa-car" aria-hidden="true"></i>
-							<p class="ml-4">Удобная доставка</p>
-						</div>
-						<div class="col-5 d-flex mt-4 align-items-center ml-4">
-							<i class="fa fa-phone" aria-hidden="true"></i>
-							<p class="ml-4">+7 915 946 96 99</p>
-						</div>
-						<div class="col-5 d-flex mt-4 align-items-center ml-4">
-							<i class="fa fa-envelope" aria-hidden="true"></i>
-							<p class="ml-4">Уведомления на почту</p>
-						</div>
-					</div>
-					<hr />
-					<div class="row mt-5 mt-md-5">
-						<div class="col-12">
-							<h3>ПРЕИМУЩЕСТВА</h3>
-							<hr />
-						</div>
-						<div v-for="preim in item.advantagesArray" class="col-12  align-items-center">
-							<div class="d-flex align-items-center">
-								<i class="fa fa-check text-success" aria-hidden="true"></i>
-								<h5 class="ml-3 mt-1">{{ preim }}</h5>
-							</div>
-							
-							<hr/>
-						</div>
-						
-					</div>
-					<div class="row mt-5">
-						<div class="col-12">
-							<h3>ОПИСАНИЕ</h3>
-							<hr />
-						</div>
-						<div class="col-12">
-							<h5>{{item.about}}</h5>
-							<hr />
-						</div>
+		<div class="row pt-5">
+			<div class="col-12 col-md-6 text-center">
+				<img style="height:500px;width:396px" class="img-fluid main-img-item rounded" :src="mainImageUrl" alt="123" />
+				<div class="row mt-2 justify-content-center">
+					<div class="col-3 text-center" v-for="(image, index) in item.itemImagesLinks">
+						<img v-on:click="imageClick(index)" class="img-fluid second__imd-item rounded" :src="image" alt="" />
 					</div>
 				</div>
 			</div>
-			<div class="row mt-5 pb-4" style="background:#efefef">
-				<div class="col-12 text-center">
-					<h2>ОТЗЫВЫ</h2>
+			<div class="col-12 col-md-6 mt-4 mt-md-0 rounded" style="background:#efefef">
+				<h1 class="text-center info_item_name">{{item.name.toUpperCase()}}</h1>
+				<p>Номер продукта: {{item.id}}</p>
+				<hr />
+				<div class="d-flex align-items-center">
+					<div class="col-6 text-left">
+						<h4 class="item__price mt-1 pb-2 pb-md-0">
+							<strike v-if="item.discount != 0" class="strile__old_price">{{ item.price | moneyFormat}} руб</strike> &nbsp;
+							<span v-if="item.discount != 0" class="price_with_sale">{{ (item.price * ( 100 - item.discount) / 100).toFixed() | moneyFormat }} руб</span>
+							<span v-else="item.discount != 0" class="price__discountnone">{{ item.price | moneyFormat }} руб</span>
+						</h4>
+					</div>
+					<div class="col-6 text-center ">
+						<p>Продано товара: {{item.countOfPurchases}}</p>
+					</div>
+				</div>
 
-					<div class="col-12 d-flex test">
-						<div class="text-left test">
-							<img style="width: 19%; height: 100%" class="img-fluid" src="https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Account-512.png" alt="" />
-							<p>Мохов Евгений</p>
+				<select v-on:change="changeSize($event)" class="mt-3 selet_size" style="width:100%">
+					<option  v-for="(size,index) in Object.keys(item.sizesDictionary)" :value="size" v-if="Object.values(item.sizesDictionary)[index] != 0">{{size}} &nbsp; (ОСТАЛОСЬ: {{Object.values(item.sizesDictionary)[index]}})</option>
+				</select>
+				<div class="row mt-2 pl-3 pr-3 align-items-center">
+					<div class="col-12 col-lg-3 d-flex align-items-center  text-center" style="background:#949494; width: auto">
+						<p>Кол-во</p>
+						<select v-model="userSelectCountItem" v-on:change="userSelectCountItem = $event.target.value" class="selet_size ml-3">
+							<option v-for="i in sizeAvailable" :value="i">{{i}}</option>
+						</select>
+					</div>
+					<div class="col-12 mt-sm-2 mt-md-0 mr-auto col-md col-lg d-flex justify-content-center align-items-center">
+						<a class="addToCard_a" v-on:click.prevent="addToBasket(item)">
+							<i class="fa fa-shopping-cart"></i>
+							ДОБАВИТЬ В КОРЗИНУ
+						</a>
+						<a class="a_buyyandex ml-1 d-flex align-items-center">
+							КУПИТЬ ЧЕРЕЗ
+							<i class="ml-1 fab fa-google-wallet" style="font-size: 15px;"></i>
+						</a>
+					</div>
+				</div>
+				<hr />
+				<div class="row align-items-center">
+					<div class="col-5 text-success d-flex align-items-center ml-4">
+						<i class="fa fa-check" aria-hidden="true"></i>
+						<p class="ml-4">Возврат</p>
+					</div>
+					<div class="col-5  d-flex align-items-center ml-4">
+						<i class="fa fa-car" aria-hidden="true"></i>
+						<p class="ml-4">Удобная доставка</p>
+					</div>
+					<div class="col-5 d-flex mt-4 align-items-center ml-4">
+						<i class="fa fa-phone" aria-hidden="true"></i>
+						<p class="ml-4">+7 915 946 96 99</p>
+					</div>
+					<div class="col-5 d-flex mt-4 align-items-center ml-4">
+						<i class="fa fa-envelope" aria-hidden="true"></i>
+						<p class="ml-4">Уведомления на почту</p>
+					</div>
+				</div>
+				<hr />
+				<div class="row mt-5 mt-md-5">
+					<div class="col-12">
+						<h3>ПРЕИМУЩЕСТВА</h3>
+						<hr />
+					</div>
+					<div v-for="preim in item.advantagesArray" class="col-12  align-items-center">
+						<div class="d-flex align-items-center">
+							<i class="fa fa-check text-success" aria-hidden="true"></i>
+							<h5 class="ml-3 mt-1">{{ preim }}</h5>
 						</div>
-						<p class="text-left test">Мне очень понравился товар, но порекомендовать я его не могу, потому что он сломался</p>
+
+						<hr />
+					</div>
+
+				</div>
+				<div class="row mt-5">
+					<div class="col-12">
+						<h3>ОПИСАНИЕ</h3>
+						<hr />
+					</div>
+					<div class="col-12">
+						<h5>{{item.about}}</h5>
+						<hr />
 					</div>
 				</div>
 			</div>
-		
+		</div>
+		<div class="row slider__item_1 mt-3">
+			@for (int i = 1; i < 6; i++)
+			{
+			<div class="col-6 col-md-3 mt-3 item__card text-center">
+				<img class="img-fluid card-img-top mx-auto mt-2" src="https://images.asos-media.com/products/belye-krossovki-adidas-originals-la-og-bb1206/7500217-1-white?$XXL$&wid=513&fit=constrain" alt="">
+				<p class="item__name">Кроссовки Adidas</p>
+				<div>
+					<a class="razmer__sneakers ml-1" href="#">44</a>
+					<a class="razmer__sneakers ml-1" href="#">44</a>
+					<a class="razmer__sneakers ml-1" href="#">44</a>
+					<a class="razmer__sneakers ml-1" href="#">44</a>
+					<a class="razmer__sneakers ml-1" href="#">44</a>
+					<a class="razmer__sneakers ml-1" href="#">44</a>
+					<a class="razmer__sneakers ml-1" href="#">44</a>
+
+				</div>
+				<p class="item__price mt-1 pb-2 pb-md-0">
+					<strike  class="strile__old_price">7000 руб</strike> &nbsp;
+				</p>
+				<div class="row mb-2">
+					<div class="col-12 justify-content-center mt-md-2">
+						<a href="#" class="item__btn__info">КУПИТЬ</a>
+						<a href="#">
+							<i class="ml-3 fa fa-heart item__fa"></i>
+						</a>
+						<a href="#">
+							<i class="ml-3 fa fa-shopping-cart item__fa"></i>
+						</a>
+
+					</div>
+				</div>
+			</div>
+			}
+		</div>
+		<div class="row mt-5 pb-4" style="background:#efefef">
+			<div class="col-12 text-center">
+				<h2>ОТЗЫВЫ</h2>
+				<template>
+					<hr />
+					<div class="col-12 d-flex otziv" style="width:auto">
+
+						<div class="row">
+							<div class="col-3 col-md-3 col-lg-2 text-left">
+								<div class="text-center">
+									<img style="" class="img-fluid" src="https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Account-512.png" alt="" />
+									<p class="">Мохов Евгений</p>
+								</div>
+
+							</div>
+							<div class="col">
+								<p class="text-left">Мне очень понравился товар, но порекомендовать я его не могу, потому что он сломался</p>
+							</div>
+						</div>
+
+					</div>
+					<hr class="hr" />
+				</template>
+
+			</div>
+		</div>
+
 	</div>
 </div>
 @section Scripts{ 
 <script type="text/javascript">
-
+		$('.slider__item_1').slick({
+			  infinite: true,
+			  slidesToShow: 4,
+			  slidesToScroll: 2
+		});
 	var item__main = new Vue({
 		el: '#item__info',
 		data: {
 			item: null,
 			mainImageUrl: '',
-			sizeAvailable: 0
-			
+			sizeAvailable: 1,
+			userSelectCountItem: 1,
+			selectedSize: 0
 		},
 		mounted() {
 			var data = {
 				id: @Model,
-				
 			};
 
 			$.ajax({
@@ -141,12 +188,12 @@
 				data: data,
 				async: true,
 				success: (res) => {
-					console.log(res);
 					this.item = res;
+					this.selectedSize = Object.keys(res.sizesDictionary)[0];
 					this.mainImageUrl = res.itemImagesLinks[0];
 					console.log(this.item);
 				}
-				
+
 			});
 		},
 		methods: {
@@ -154,7 +201,27 @@
 				this.mainImageUrl = this.item.itemImagesLinks[index];
 			},
 			changeSize: function (event) {
-				this.sizeAvailable = Object.values(this.item.sizesDictionary)[event.target.value];
+
+				this.sizeAvailable = this.item.sizesDictionary[event.target.value];
+				this.selectedSize = event.target.value;
+			},
+			addToBasket: function (item) {
+				var data = {
+					Name: item.name,
+					About: item.about,
+					Price: item.price,
+					Discount: item.discount,
+					Size: item.sizesDictionary
+				}
+				$.ajax({
+					type: 'PUT',
+					url: '/Shop/AddToBasket',
+					data: data,
+					async: true,
+					success: function () {
+						
+					}
+				});
 			}
 
 		},

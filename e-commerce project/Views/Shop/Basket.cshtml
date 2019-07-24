@@ -1,0 +1,177 @@
+﻿
+@{
+	ViewData["Title"] = "Basket";
+}
+	<div class="basket" id="basket_main">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-md-7">
+					<div class="row">
+						<div class="col-12 mt-4 favorite_block" style="border: 2px solid black;" v-for="(item, index) in items" :id="item.id">
+							<div class="row">
+								<div class="col-8 offset-2 offset-md-0 col-md-4 mr-auto justify-content-center justify-content-md-start">
+									<a class="" href="">
+										<img class="img-fluid rounded" :src="item.itemImagesLinks[0]" alt="">
+									</a>
+
+								</div>
+								<div class="col">
+									<div class="d-flex align-items-center">
+										<h2>{{item.name}}</h2>
+										<a class="ml-auto" v-on:click.prevent="deleteFromFavorite(item)">
+											<i class="fa fa-times icon_times  text-danger" aria-hidden="true"></i>
+										</a>
+
+									</div>
+
+									<div class="favorite_block_size  mt-2">
+										<p>Размеры:</p>
+										<template v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-if="razmer > 0">
+											<a class="razmer__sneakers ml-1 favoritestyle_a" v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''" href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
+										</template>
+
+									</div>
+									<div class="">
+										<h4 class="mt-2">Описание:</h4>
+										<p class="ml-2">{{item.about}}</p>
+									</div>
+									<div class="mt-2 align-items-center">
+										<h4 class="align-items-center">
+											Цена:
+											<strike v-if="item.discount != 0" class="strile__old_price">{{ item.price | moneyFormat}} руб</strike> &nbsp;
+											<span v-if="item.discount != 0" class="price_with_sale">{{ (item.price * ( 100 - item.discount) / 100).toFixed() | moneyFormat }} руб</span>
+											<span v-else="item.discount != 0" class="price__discountnone">{{ item.price | moneyFormat }} руб</span>
+										</h4>
+									</div>
+									<div class="mt-2 d-flex">
+										<h4>Количество: </h4>
+										<input class="ml-2" type="number" value="1" min-value="0" v-model.number="itemsCount[index]" />
+									</div>
+									<div class="row mt-4 mt-md-5 pb-3">
+										<div class="col-12 text-center  text-md-right mr-3">
+											<a class="deleteFromFavorite" href="#">Добавить в корзину</a>
+											<a class="deleteFromFavorite" v-on:click="locationToShop(index)" href="#">В магазин</a>
+										</div>
+									</div>
+
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-md-4 offset-md-1 mt-4">
+					<div class="row row-stat-basket">
+						<div class="col-12 pb-5" style="border: 4px solid #055ec3">
+							<h4 class="text-center">Информация</h4>
+							<h5 class="mt-2">Вы хотите купить:</h5>
+							<div class="itemstobuy ml-3 mt-2">
+								<div class="d-flex align-items-center mt-1" v-for="( item, index ) in items">
+									<i class="fa fa-check pr-2 text-success" aria-hidden="true"> </i>
+									<h6>{{item.name}} <span class="text-danger">({{itemsCount[index]}} шт)</span></h6>
+								</div>
+							</div>
+							<h5 class="pb-4 pt-3">Итого к оплате : <span class="text-danger">{{ allPrice | moneyFormat }}</span></h5>
+							<a class="buy_button" href="#">Оплатить</a>
+						</div>
+					</div>
+				</div>	
+				<div class="col-12 col-md-4">
+
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
+@section Scripts{
+	<script type="text/javascript">
+	var favorite = new Vue({
+		el:'#basket_main',
+		data: {
+			items: [],
+			itemsCount: [],
+		    allPrice: 0,
+		},
+		filters: {
+				moneyFormat: function (value) {
+					var mass = value.toString().split("").reverse();
+					var mass2 = [];
+					let j = 0;
+					for (var i = 0; i < value.toString().length; i++) {
+						if (j == 3) {
+							mass2.push('.');
+							mass2.push(mass[i]);
+
+							j = 1;
+						}
+						else {
+							mass2.push(mass[i]);
+							j++;
+						}
+					}
+					return mass2.reverse().join("");
+
+				}
+			},
+		methods: {
+			locationToShop: function(id){
+				window.location.replace('/Shop/Info?itemId=' + id);
+			},
+			calcSum: function () {
+				this.allPrice = 0;
+				this.items.forEach((el, index) => {
+					this.allPrice = this.allPrice + this.itemsCount[index] * el.price;
+				});
+			},
+			deleteFromFavorite: function(item){
+				var data = {
+					userEmail: '@User.Identity.Name',
+					itemId: item.id
+				}
+				$.ajax({
+					type:'DELETE',
+					url:'/Shop/DeleteFromBasket',
+					data: data,
+					async: true,
+					success: () => {
+						$("body").overhang({
+							type: "info",
+							message: 'Товар успешно удалён',
+							duration: 0.85,
+							upper: false,
+						});
+						this.items.splice(this.items.indexOf(item), 1);
+					}
+				});
+				
+			}
+		},
+		watch: {
+			itemsCount: function () {
+				this.calcSum();
+			}
+		},
+		mounted(){
+			$.ajax({
+				type:'GET',
+				url:'/Shop/GetBasketList',
+				async: true,
+				data:{
+					userEmail: '@User.Identity.Name'
+				},
+				success: (res) => {
+					this.items = res;
+					this.itemsCount.shift();
+					res.forEach((el) => {
+						this.itemsCount.push(1);
+					});
+				}
+			});
+			
+		}
+	});
+	</script>
+}
+
