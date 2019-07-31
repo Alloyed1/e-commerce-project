@@ -183,6 +183,7 @@
 				},
 				categoryChange: (event) =>  {
 					this.selectedCategoryId = event.target.value;
+					console.log(this.selectedCategoryId);
 				},
 				addItem: function () {
 					var data = {
@@ -192,7 +193,7 @@
 						ItemPreimush: this.preimush,
 						ItemSizes: this.sizes,
 						ItemImagesLinks: this.itemImageLink,
-						ItemCategoryId: this.ItemCategoryId
+						CategoryId: 1
 					}
 					$.ajax({
 						type: 'PUT',

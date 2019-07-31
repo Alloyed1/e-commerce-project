@@ -137,30 +137,17 @@ namespace e_commerce_project.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<string>("BasketItemsList");
+                    b.Property<int>("Count");
+
+                    b.Property<int>("ItemId");
+
+                    b.Property<int>("Size");
 
                     b.HasKey("Id", "UserId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Baskets");
-                });
-
-            modelBuilder.Entity("e_commerce_project.Models.Brand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AboutBrand");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("YearCreate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brand");
                 });
 
             modelBuilder.Entity("e_commerce_project.Models.Category", b =>
@@ -205,15 +192,11 @@ namespace e_commerce_project.Migrations
 
                     b.Property<string>("AdvantagesArray");
 
-                    b.Property<int?>("BrandId");
-
-                    b.Property<int?>("CategoryId");
+                    b.Property<int>("CategoryId");
 
                     b.Property<int>("CountOfPurchases");
 
                     b.Property<int?>("Discount");
-
-                    b.Property<byte[]>("FirstImage");
 
                     b.Property<byte>("IsDelete");
 
@@ -225,19 +208,55 @@ namespace e_commerce_project.Migrations
 
                     b.Property<double>("Price");
 
-                    b.Property<byte[]>("SecondImage");
-
                     b.Property<string>("SizesDictionary");
 
-                    b.Property<byte[]>("ThirdImage");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("e_commerce_project.Models.ItemsOrders", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count");
+
+                    b.Property<int>("ItemId");
+
+                    b.Property<int>("OrderId");
+
+                    b.Property<int>("Size");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("ItemsOrders");
+                });
+
+            modelBuilder.Entity("e_commerce_project.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int>("Sum");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("e_commerce_project.Models.User", b =>
@@ -364,13 +383,30 @@ namespace e_commerce_project.Migrations
 
             modelBuilder.Entity("e_commerce_project.Models.Item", b =>
                 {
-                    b.HasOne("e_commerce_project.Models.Brand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId");
-
                     b.HasOne("e_commerce_project.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("e_commerce_project.Models.ItemsOrders", b =>
+                {
+                    b.HasOne("e_commerce_project.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("e_commerce_project.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("e_commerce_project.Models.Order", b =>
+                {
+                    b.HasOne("e_commerce_project.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

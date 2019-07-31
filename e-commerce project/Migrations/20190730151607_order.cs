@@ -2,7 +2,7 @@
 
 namespace e_commerce_project.Migrations
 {
-    public partial class favorite : Migration
+    public partial class order : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

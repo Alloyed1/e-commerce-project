@@ -11,7 +11,7 @@
 							<div class="row">
 								<div class="col-8 offset-2 offset-md-0 col-md-4 mr-auto justify-content-center justify-content-md-start">
 									<a class="" href="">
-										<img class="img-fluid rounded" :src="item.itemImagesLinks[0]" alt="">
+										<img class="img-fluid rounded" :src="item.imageUrl" alt="">
 									</a>
 
 								</div>
@@ -25,11 +25,8 @@
 									</div>
 
 									<div class="favorite_block_size  mt-2">
-										<p>Размеры:</p>
-										<template v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-if="razmer > 0">
-											<a class="razmer__sneakers ml-1 favoritestyle_a" v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''" href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
-										</template>
-
+										<p>Размер:</p>
+										<a class="razmer__sneakers ml-1 favoritestyle_a"  href="#">{{item.size}}</a>
 									</div>
 									<div class="">
 										<h4 class="mt-2">Описание:</h4>
@@ -50,7 +47,7 @@
 									<div class="row mt-4 mt-md-5 pb-3">
 										<div class="col-12 text-center  text-md-right mr-3">
 											<a class="deleteFromFavorite" href="#">Добавить в корзину</a>
-											<a class="deleteFromFavorite" v-on:click="locationToShop(index)" href="#">В магазин</a>
+											<a class="deleteFromFavorite" v-on:click="locationToShop(item.id)" href="#">В магазин</a>
 										</div>
 									</div>
 
@@ -72,8 +69,8 @@
 									<h6>{{item.name}} <span class="text-danger">({{itemsCount[index]}} шт)</span></h6>
 								</div>
 							</div>
-							<h5 class="pb-4 pt-3">Итого к оплате : <span class="text-danger">{{ allPrice | moneyFormat }}</span></h5>
-							<a class="buy_button" href="#">Оплатить</a>
+							<h5 class="pb-4 pt-3">Итого к оплате : <span class="text-danger">{{ allPrice | moneyFormat }}</span> руб</h5>
+							<a class="buy_button" v-on:click.prevent="buyItems">Оплатить</a>
 						</div>
 					</div>
 				</div>	
@@ -116,6 +113,29 @@
 				}
 			},
 		methods: {
+			buyItems: function () {
+				var massItemsNotNull = [];
+				this.itemsCount.forEach(function (el, index) {
+					if (el > 0) {
+						favorite.items[index].count = el;
+						massItemsNotNull.push(favorite.items[index]);
+					}
+				});
+				var data = {
+					userEmail: '@User.Identity.Name',
+					items: massItemsNotNull,
+					sum: this.allPrice
+				}
+				console.log(massItemsNotNull);
+				$.ajax({
+					type: 'PUT',
+					url: '/Shop/AddOrder',
+					data: data,
+					success: function () {
+						alert(123);
+					}
+				});
+			},
 			locationToShop: function(id){
 				window.location.replace('/Shop/Info?itemId=' + id);
 			},
@@ -128,8 +148,10 @@
 			deleteFromFavorite: function(item){
 				var data = {
 					userEmail: '@User.Identity.Name',
-					itemId: item.id
+					itemId: item.id,
+					itemSize: item.size,
 				}
+				console.log(data);
 				$.ajax({
 					type:'DELETE',
 					url:'/Shop/DeleteFromBasket',
@@ -162,6 +184,7 @@
 					userEmail: '@User.Identity.Name'
 				},
 				success: (res) => {
+					console.log(res);
 					this.items = res;
 					this.itemsCount.shift();
 					res.forEach((el) => {

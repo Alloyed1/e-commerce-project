@@ -25,21 +25,22 @@ namespace e_commerce_project.Repositories
 	}
 	public class AdminRepository: IAdminRepository
 	{
-		string connectionString;
+		readonly string connectionString;
 		ICategoryRepository categoryRepository;
-		public AdminRepository(IConfiguration configuration, ICategoryRepository categoryRepository)
+		ApplicationContext dbContext;
+		public AdminRepository(IConfiguration configuration, ICategoryRepository categoryRepository, ApplicationContext dbContext)
 		{
 			connectionString = configuration.GetConnectionString("DefaultConnection");
 			this.categoryRepository = categoryRepository;
+			this.dbContext = dbContext;
 		}
 
 		public async Task AddItem(Item item)
 		{
-			using(IDbConnection dbDapper = new SqlConnection(connectionString))
+			//await dbContext.Items.AddAsync(item);
+			using (IDbConnection dbDapper = new SqlConnection(connectionString))
 			{
-				var query = "INSERT INTO Items (Name, Price, About,CountOfPurchases, AddItemTime, SizesDictionary, AdvantagesArray, Discount, ItemImagesLinks, CategoryId)" +
-					" VALUES (@Name, @Price, @About,@CountOfPurchases, @AddItemTime, @SizesDictionary, @AdvantagesArray, @Discount, @ItemImagesLinks, @CategoryId);" +
-				"SELECT CAST(SCOPE_IDENTITY() as int)";
+				string query = "INSERT INTO Items (Name, Price, About, CountOfPurchases, AddItemTime, SizesDictionary, AdvantagesArray, Discount, ItemImagesLinks, CategoryId) VALUES(@Name, @Price, @About,@CountOfPurchases, @AddItemTime, @SizesDictionary, @AdvantagesArray, @Discount, @ItemImagesLinks, @CategoryId)";
 
 				await dbDapper.ExecuteAsync(query, new { item.Name, item.Price, item.About, item.CountOfPurchases, item.AddItemTime, item.SizesDictionary, item.AdvantagesArray, item.Discount, item.ItemImagesLinks, item.CategoryId });
 			}
@@ -48,17 +49,18 @@ namespace e_commerce_project.Repositories
 		{
 			using (IDbConnection dbDapper = new SqlConnection(connectionString))
 			{
-				var query = "UPDATE Items SET Name = @Name, Price = @Price, About = @About, CountOfPurchases = @CountOfPurchases, AddItemTime = @AddItemTime, SizesDictionary = @SizesDictionary, ItemImagesLinks = @ItemImagesLinks, CategoryId = @CategoryId WHERE Id = @Id";
+				var query = @"UPDATE Items SET 
+										Name = @Name, Price = @Price, About = @About, CountOfPurchases = @CountOfPurchases, AddItemTime = @AddItemTime, SizesDictionary = @SizesDictionary, ItemImagesLinks = @ItemImagesLinks, CategoryId = @CategoryId WHERE Id = @Id";
 
 				await dbDapper.ExecuteAsync(query, new { item.Name, item.Id, item.Price, item.About, item.CountOfPurchases, item.AddItemTime, item.SizesDictionary, item.ItemImagesLinks, item.CategoryId});
 			}
 		}
 		public async Task<List<ItemShopViewModel>> GetAllItems()
 		{
-			using(IDbConnection dbDapper = new SqlConnection(connectionString))
+			using(var dbDapper = new SqlConnection(connectionString))
 			{
-				var result = await dbDapper.QueryAsync<Item>("SELECT * FROM Items");
-				List<Item> items = result.ToList();
+				var result = (await dbDapper.QueryAsync<Item>("SELECT * FROM Items"));
+				var items = result.ToList();
 
 				List<Category> categories = await categoryRepository.GetAllCaregories();
 
@@ -72,7 +74,6 @@ namespace e_commerce_project.Repositories
 					itemShop.About = item.About;
 					itemShop.Price = item.Price;
 					itemShop.Discount = item.Discount;
-					itemShop.Brand = item.Brand;
 					itemShop.Category = item.Category;
 					itemShop.IsDelete = item.IsDelete;
 					itemShop.IsHide = item.IsHide;
@@ -101,7 +102,6 @@ namespace e_commerce_project.Repositories
 				itemShop.About = item.About;
 				itemShop.Price = item.Price;
 				itemShop.Discount = item.Discount;
-				itemShop.Brand = item.Brand;
 				itemShop.Category = await categoryRepository.GetCategory(Convert.ToInt32(item.CategoryId));
 				itemShop.IsDelete = item.IsDelete;
 				itemShop.IsHide = item.IsHide;

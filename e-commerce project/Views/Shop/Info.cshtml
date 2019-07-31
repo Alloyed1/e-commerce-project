@@ -31,7 +31,7 @@
 				</div>
 
 				<select v-on:change="changeSize($event)" class="mt-3 selet_size" style="width:100%">
-					<option  v-for="(size,index) in Object.keys(item.sizesDictionary)" :value="size" v-if="Object.values(item.sizesDictionary)[index] != 0">{{size}} &nbsp; (ОСТАЛОСЬ: {{Object.values(item.sizesDictionary)[index]}})</option>
+					<option v-for="(size,index) in Object.keys(item.sizesDictionary)" :value="size" v-if="Object.values(item.sizesDictionary)[index] != 0">{{size}} &nbsp; (ОСТАЛОСЬ: {{Object.values(item.sizesDictionary)[index]}})</option>
 				</select>
 				<div class="row mt-2 pl-3 pr-3 align-items-center">
 					<div class="col-12 col-lg-3 d-flex align-items-center  text-center" style="background:#949494; width: auto">
@@ -98,40 +98,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row slider__item_1 mt-3">
-			@for (int i = 1; i < 6; i++)
-			{
-			<div class="col-6 col-md-3 mt-3 item__card text-center">
-				<img class="img-fluid card-img-top mx-auto mt-2" src="https://images.asos-media.com/products/belye-krossovki-adidas-originals-la-og-bb1206/7500217-1-white?$XXL$&wid=513&fit=constrain" alt="">
-				<p class="item__name">Кроссовки Adidas</p>
-				<div>
-					<a class="razmer__sneakers ml-1" href="#">44</a>
-					<a class="razmer__sneakers ml-1" href="#">44</a>
-					<a class="razmer__sneakers ml-1" href="#">44</a>
-					<a class="razmer__sneakers ml-1" href="#">44</a>
-					<a class="razmer__sneakers ml-1" href="#">44</a>
-					<a class="razmer__sneakers ml-1" href="#">44</a>
-					<a class="razmer__sneakers ml-1" href="#">44</a>
-
-				</div>
-				<p class="item__price mt-1 pb-2 pb-md-0">
-					<strike  class="strile__old_price">7000 руб</strike> &nbsp;
-				</p>
-				<div class="row mb-2">
-					<div class="col-12 justify-content-center mt-md-2">
-						<a href="#" class="item__btn__info">КУПИТЬ</a>
-						<a href="#">
-							<i class="ml-3 fa fa-heart item__fa"></i>
-						</a>
-						<a href="#">
-							<i class="ml-3 fa fa-shopping-cart item__fa"></i>
-						</a>
-
-					</div>
-				</div>
-			</div>
-			}
-		</div>
+	
 		<div class="row mt-5 pb-4" style="background:#efefef">
 			<div class="col-12 text-center">
 				<h2>ОТЗЫВЫ</h2>
@@ -162,12 +129,8 @@
 	</div>
 </div>
 @section Scripts{ 
+
 <script type="text/javascript">
-		$('.slider__item_1').slick({
-			  infinite: true,
-			  slidesToShow: 4,
-			  slidesToScroll: 2
-		});
 	var item__main = new Vue({
 		el: '#item__info',
 		data: {
@@ -207,11 +170,10 @@
 			},
 			addToBasket: function (item) {
 				var data = {
-					Name: item.name,
-					About: item.about,
-					Price: item.price,
-					Discount: item.discount,
-					Size: item.sizesDictionary
+					itemId: item.id,
+					userEmail: '@User.Identity.Name',
+					size: this.selectedSize,
+					count: this.userSelectCountItem,
 				}
 				$.ajax({
 					type: 'PUT',
@@ -219,7 +181,7 @@
 					data: data,
 					async: true,
 					success: function () {
-						
+						alert(123);
 					}
 				});
 			}

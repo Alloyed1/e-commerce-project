@@ -47,8 +47,7 @@ namespace e_commerce_project.Repositories
 		{
 			using(IDbConnection dbDapper = new SqlConnection(connectionString))
 			{
-				var result = await dbDapper.QueryAsync<Category>("SELECT * FROM Categories WHERE Id = @categoryId", new { categoryId });
-				return result.FirstOrDefault();
+				return await dbDapper.QueryFirstOrDefaultAsync<Category>("SELECT * FROM Categories WHERE Id = @categoryId", new { categoryId });
 			}
 		}
 	}

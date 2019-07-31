@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace e_commerce_project.Models
 {
-	public class Brand
+	public class Order
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public string Name { get; set; }
-		public string AboutBrand { get; set; }
-		public int YearCreate { get; set; }
+		public DateTime Date { get; set; }
+		public int Sum { get; set; }
+
+		public string UserId { get; set; }
+		public User User { get; set; }
+
 	}
 }

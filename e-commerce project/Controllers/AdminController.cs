@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using e_commerce_project.Models;
+﻿using e_commerce_project.Models;
 using e_commerce_project.Repositories;
 using e_commerce_project.ViewModel.Account;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,18 +22,20 @@ namespace e_commerce_project.Controllers
 		}
 
 		[NonAction]
-		private Item ConvertViewModelToItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks, string ItemCategoryId)
+		private Item ConvertViewModelToItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks, int ItemCategoryId)
 		{
-			Item item = new Item();
-			item.Name = Name;
-			item.About = About;
-			item.Price = Convert.ToDouble(Price);
-			item.AdvantagesArray = JsonConvert.SerializeObject(ItemPreimush);
-			item.SizesDictionary = JsonConvert.SerializeObject(ItemSizes);
-			item.Discount = 0;
-			item.AddItemTime = DateTime.Now;
-			item.ItemImagesLinks = JsonConvert.SerializeObject(ItemImagesLinks);
-			item.CategoryId = Convert.ToInt32(ItemCategoryId);
+			Item item = new Item
+			{
+				Name = Name,
+				About = About,
+				Price = Convert.ToDouble(Price),
+				AdvantagesArray = JsonConvert.SerializeObject(ItemPreimush),
+				SizesDictionary = JsonConvert.SerializeObject(ItemSizes),
+				Discount = 0,
+				AddItemTime = DateTime.Now,
+				ItemImagesLinks = JsonConvert.SerializeObject(ItemImagesLinks),
+				CategoryId = ItemCategoryId
+			};
 			return item;
 		}
 		public IActionResult Index()
@@ -66,9 +65,9 @@ namespace e_commerce_project.Controllers
 		}
 
 		[HttpPut]
-		public async Task AddItemInShop(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks, string ItemCategoryId)
+		public async Task AddItemInShop(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string[] ItemImagesLinks, int CategoryId)
 		{
-			await adminRepository.AddItem(ConvertViewModelToItem(Name, About, Price, ItemSizes, ItemPreimush, ItemImagesLinks, ItemCategoryId));
+			await adminRepository.AddItem(ConvertViewModelToItem(Name, About, Price, ItemSizes, ItemPreimush, ItemImagesLinks, CategoryId));
 		}
 		[HttpGet]
 		public async Task<List<ItemShopViewModel>> GetAllItemsInShop()
@@ -101,9 +100,9 @@ namespace e_commerce_project.Controllers
 			return View(itemId);
 		}
 		[HttpPost]
-		public async Task EditItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string ItemId, string[] ItemImagesLinks, string ItemCategoryId)
+		public async Task EditItem(string Name, string About, string Price, Dictionary<int, int> ItemSizes, string[] ItemPreimush, string ItemId, string[] ItemImagesLinks, int CategoryId)
 		{
-			await adminRepository.EditItem(ConvertViewModelToItem(Name, About, Price, ItemSizes, ItemPreimush, ItemImagesLinks, ItemCategoryId));
+			await adminRepository.EditItem(ConvertViewModelToItem(Name, About, Price, ItemSizes, ItemPreimush, ItemImagesLinks, CategoryId));
 		}
 
 	}

@@ -14,21 +14,25 @@ namespace e_commerce_project.Controllers
 {
 	public class ShopController : Controller
 	{
-		IShopRepository shopRepository;
+		private readonly IShopRepository shopRepository;
+
 		public ShopController(IShopRepository shopRepository)
 		{
 			this.shopRepository = shopRepository;
 		}
+
 		[HttpGet]
 		public IActionResult Index()
 		{
 			return View();
 		}
+
 		[HttpGet]
 		public IActionResult Info(int itemId)
 		{
 			return View(itemId);
 		}
+
 		[HttpGet]
 		public IActionResult Favorite()
 		{
@@ -39,14 +43,16 @@ namespace e_commerce_project.Controllers
 		{
 			return await shopRepository.GetFavoriteList(userEmail);
 		}
+
 		[HttpDelete]
 		public async Task DeleteFromFavorite(string userEmail, int itemId) {
 			await shopRepository.DeleteFromFavorite(userEmail, itemId);
 		}
+
 		[HttpDelete]
-		public async Task DeleteFromBasket(string userEmail, int itemId)
+		public async Task DeleteFromBasket(string userEmail, int itemId, int itemSize)
 		{
-			await shopRepository.DeleteFromBasket(userEmail, itemId);
+			await shopRepository.DeleteFromBasket(userEmail, itemId, itemSize);
 		}
 		[HttpGet]
 		public async Task<ItemShopViewModel> GetItemInShop(int id)
@@ -59,14 +65,20 @@ namespace e_commerce_project.Controllers
 			return await shopRepository.AddToFavorit(userEmail, id);
 		}
 		[HttpPut]
-		public async Task<bool> AddToBasket(BasketViewModel model)
+		public async Task<bool> AddToBasket(int itemId, string userEmail, int size, int count)
 		{
-			return await shopRepository.AddToBaskets("123", 1);
+			return await shopRepository.AddToBaskets(userEmail, itemId, size, count);
 		}
 		[HttpGet]
-		public async Task<List<ItemShopViewModel>> GetBasketList(string userEmail)
+		public async Task<List<BasketViewModel>> GetBasketList(string userEmail)
 		{
 			return await shopRepository.GetBasketList(userEmail);
+		}
+
+		[HttpPut]
+		public async Task AddOrder(string userEmail, List<BasketViewModel> items, int sum)
+		{
+			await shopRepository.AddOrder(userEmail, items, sum);
 		}
 		[HttpGet]
 		public IActionResult Basket()

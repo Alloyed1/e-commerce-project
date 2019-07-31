@@ -22,13 +22,7 @@ namespace e_commerce_project.ViewModel.Account
 		
 		public string[] ItemImagesLinks { get; set; }
 
-		public byte[] FirstImage { get; set; }
-		public byte[] SecondImage { get; set; }
-		public byte[] ThirdImage { get; set; }
-
 		public int? Discount { get; set; }
-
-		public Brand Brand { get; set; }
 
 		public int CategoryId { get; set; }
 		public Category Category { get; set; }

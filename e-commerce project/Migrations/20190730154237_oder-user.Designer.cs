@@ -10,8 +10,8 @@ using e_commerce_project.Models;
 namespace e_commerce_project.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190723093508_basket")]
-    partial class basket
+    [Migration("20190730154237_oder-user")]
+    partial class oderuser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -139,30 +139,17 @@ namespace e_commerce_project.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<string>("BasketItemsList");
+                    b.Property<int>("Count");
+
+                    b.Property<int>("ItemId");
+
+                    b.Property<int>("Size");
 
                     b.HasKey("Id", "UserId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Baskets");
-                });
-
-            modelBuilder.Entity("e_commerce_project.Models.Brand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AboutBrand");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("YearCreate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brand");
                 });
 
             modelBuilder.Entity("e_commerce_project.Models.Category", b =>
@@ -207,15 +194,11 @@ namespace e_commerce_project.Migrations
 
                     b.Property<string>("AdvantagesArray");
 
-                    b.Property<int?>("BrandId");
-
-                    b.Property<int?>("CategoryId");
+                    b.Property<int>("CategoryId");
 
                     b.Property<int>("CountOfPurchases");
 
                     b.Property<int?>("Discount");
-
-                    b.Property<byte[]>("FirstImage");
 
                     b.Property<byte>("IsDelete");
 
@@ -227,19 +210,34 @@ namespace e_commerce_project.Migrations
 
                     b.Property<double>("Price");
 
-                    b.Property<byte[]>("SecondImage");
-
                     b.Property<string>("SizesDictionary");
 
-                    b.Property<byte[]>("ThirdImage");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("e_commerce_project.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("OrderViewModelList");
+
+                    b.Property<int>("Sum");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("e_commerce_project.Models.User", b =>
@@ -366,13 +364,17 @@ namespace e_commerce_project.Migrations
 
             modelBuilder.Entity("e_commerce_project.Models.Item", b =>
                 {
-                    b.HasOne("e_commerce_project.Models.Brand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId");
-
                     b.HasOne("e_commerce_project.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("e_commerce_project.Models.Order", b =>
+                {
+                    b.HasOne("e_commerce_project.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

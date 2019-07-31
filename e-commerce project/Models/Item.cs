@@ -23,16 +23,11 @@ namespace e_commerce_project.Models
 		public byte IsDelete { get; set; }
 		public byte IsHide { get; set; }
 
-		public byte[] FirstImage { get; set; }
-		public byte[] SecondImage { get; set; }
-		public byte[] ThirdImage { get; set; }
-
 		public string ItemImagesLinks { get; set; }
 
 		public int? Discount { get; set; }
 
-		public Brand Brand { get; set; }
-		public int? CategoryId { get; set; }
+		public int CategoryId { get; set; }
 		public Category Category { get; set; }
 	}
 }

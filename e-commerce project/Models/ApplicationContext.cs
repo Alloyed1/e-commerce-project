@@ -21,8 +21,9 @@ namespace e_commerce_project.Models
 		}
 		public DbSet<Item> Items { get; set; }
 		public DbSet<Category> Categories { get; set; }
-		public DbSet<Brand> Brand { get; set; }
 		public DbSet<Favorite> Favorites { get; set; }
 		public DbSet<Basket> Baskets { get; set; }
+		public DbSet<Order> Orders { get; set; }
+		public DbSet<ItemsOrders> ItemsOrders { get; set; }
 	}
 }

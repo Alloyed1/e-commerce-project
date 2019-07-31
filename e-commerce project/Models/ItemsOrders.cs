@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace e_commerce_project.Models
 {
-	public class Basket
+	public class ItemsOrders
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		[Key]
-		public string UserId { get; set; }
-		public User User { get; set; }
+
+		public int OrderId { get; set; }
+		public Order Order { get; set; }
 
 		public int ItemId { get; set; }
-		public int Count { get; set; }
+		public Item Item { get; set; }
+
 		public int Size { get; set; }
+		public int Count { get; set; }
 	}
 }
