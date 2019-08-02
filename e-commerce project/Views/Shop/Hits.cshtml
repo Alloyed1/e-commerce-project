@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
 	ViewData["Title"] = "Index";
 }
 
@@ -29,8 +28,8 @@
 							<a v-on:click="categorAddFilter(categor, $event)" href="#" v-bind:class="(itemCategoriesActive.indexOf(categor) != -1) ? 'category-active' : ''" class="category__item">{{categor}}</a>
 							<br />
 						</template>
-						
-						
+
+
 					</div>
 				</div>
 				<div class="row mt-3">
@@ -68,9 +67,7 @@
 				</div>
 				<div class="row justify-content-center" v-if="!pageIsLoad">
 					<div class="col-6 col-md-4 mt-3 card item__card text-center" v-for="(item, index) in itemPages[pageActiveNumber - 1]" v-if="item.isHide == 0 && item.isDelete == 0 && itemFilterIsShow[index] == 1 " style="border:none;">
-						<img class="img-fluid card-img-top mx-auto mt-2" :src="item.itemImagesLinks[0]" alt="">	
-						</div>
-						
+						<img class="img-fluid card-img-top mx-auto mt-2" :src="item.itemImagesLinks[0]" alt="">
 						<p class="item__name">{{ item.name }}</p>
 						<div>
 							<a class="razmer__sneakers ml-1" v-for="(razmer, indexRazmer) in Object.values(item.sizesDictionary)" v-if="razmer > 0" v-bind:class="(razmer > 0 && razmer < 4) ? 'razmer__sneakers_end' : ''" href="#">{{Object.keys(item.sizesDictionary)[indexRazmer]}}</a>
@@ -147,13 +144,13 @@
 				itemPages: []
 			},
 			watch: {
-				
+
 			},
 			mounted() {
 				this.pageIsLoad = true;
 				$.ajax({
 					type: 'GET',
-					url: '/Admin/GetAllItemsInShop',
+					url: '/Admin/GetAllItemsInShopHits',
 					async: true,
 					success: (res) => {
 						this.items = res;
@@ -290,7 +287,7 @@
 						if (this.itemCategoriesActive.indexOf(element.category.categoryName) != -1 || this.itemCategoriesActive.length == 0) {
 							categorFiler = true;
 						}
-						
+
 
 						if (countSizesFilter != sizeIsFind || !filterPrice || !categorFiler) {
 							shop.$set(shop.itemFilterIsShow, index, 0);
@@ -301,7 +298,7 @@
 					})
 					this.calculatedPages();
 					this.reloadPagesFilter();
-					
+
 					this.pageIsLoad = false;
 				},
 				pagePrev: function ()  {

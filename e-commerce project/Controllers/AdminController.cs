@@ -75,6 +75,16 @@ namespace e_commerce_project.Controllers
 			return await adminRepository.GetAllItems();
 		}
 		[HttpGet]
+		public async Task<List<ItemShopViewModel>> GetAllItemsInShopWithDiscount()
+		{
+			return await adminRepository.GetAllItemsWithDiscount();
+		}
+		[HttpGet]
+		public async Task<List<ItemShopViewModel>> GetAllItemsInShopHits()
+		{
+			return await adminRepository.GetAllItemsHits();
+		}
+		[HttpGet]
 		public async Task<ItemShopViewModel> GetItemInShop(int id)
 		{
 			return await adminRepository.GetItem(id);

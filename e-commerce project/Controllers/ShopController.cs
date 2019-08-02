@@ -26,6 +26,16 @@ namespace e_commerce_project.Controllers
 		{
 			return View();
 		}
+		[HttpGet]
+		public IActionResult Sales()
+		{
+			return View();
+		}
+		[HttpGet]
+		public IActionResult Hits()
+		{
+			return View();
+		}
 
 		[HttpGet]
 		public IActionResult Info(int itemId)

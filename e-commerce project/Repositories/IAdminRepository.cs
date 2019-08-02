@@ -19,6 +19,8 @@ namespace e_commerce_project.Repositories
 		Task AddItem(Item item);
 		Task EditItem(Item item);
 		Task<List<ItemShopViewModel>> GetAllItems();
+		Task<List<ItemShopViewModel>> GetAllItemsWithDiscount();
+		Task<List<ItemShopViewModel>> GetAllItemsHits();
 		Task HideItem(int itemId);
 		Task HideItemOff(int itemId);
 		Task<ItemShopViewModel> GetItem(int itemId);
@@ -78,6 +80,70 @@ namespace e_commerce_project.Repositories
 					itemShop.IsDelete = item.IsDelete;
 					itemShop.IsHide = item.IsHide;
 					itemShop.Category = categories.Where(i => i.Id == Convert.ToInt32(item.CategoryId)).FirstOrDefault();
+					itemShop.SizesDictionary = JsonConvert.DeserializeObject<Dictionary<int, int>>(item.SizesDictionary);
+					itemShop.AdvantagesArray = JsonConvert.DeserializeObject<string[]>(item.AdvantagesArray);
+					itemShop.ItemImagesLinks = JsonConvert.DeserializeObject<string[]>(item.ItemImagesLinks);
+
+					itemShopList.Add(itemShop);
+				}
+				return itemShopList;
+			}
+		}
+		public async Task<List<ItemShopViewModel>> GetAllItemsWithDiscount()
+		{
+			using (var dbDapper = new SqlConnection(connectionString))
+			{
+				var result = (await dbDapper.QueryAsync<Item>("SELECT * FROM Items WHERE Discount > 0"));
+				var items = result.ToList();
+
+				List<Category> categories = await categoryRepository.GetAllCaregories();
+
+
+				List<ItemShopViewModel> itemShopList = new List<ItemShopViewModel>();
+				foreach (var item in items)
+				{
+					ItemShopViewModel itemShop = new ItemShopViewModel();
+					itemShop.Id = item.Id;
+					itemShop.Name = item.Name;
+					itemShop.About = item.About;
+					itemShop.Price = item.Price;
+					itemShop.Discount = item.Discount;
+					itemShop.Category = item.Category;
+					itemShop.IsDelete = item.IsDelete;
+					itemShop.IsHide = item.IsHide;
+					itemShop.Category = categories.FirstOrDefault(i => i.Id == Convert.ToInt32(item.CategoryId));
+					itemShop.SizesDictionary = JsonConvert.DeserializeObject<Dictionary<int, int>>(item.SizesDictionary);
+					itemShop.AdvantagesArray = JsonConvert.DeserializeObject<string[]>(item.AdvantagesArray);
+					itemShop.ItemImagesLinks = JsonConvert.DeserializeObject<string[]>(item.ItemImagesLinks);
+
+					itemShopList.Add(itemShop);
+				}
+				return itemShopList;
+			}
+		}
+		public async Task<List<ItemShopViewModel>> GetAllItemsHits()
+		{
+			using (var dbDapper = new SqlConnection(connectionString))
+			{
+				var result = (await dbDapper.QueryAsync<Item>("SELECT * FROM Items ORDER BY CountOfPurchases DESC"));
+				var items = result.ToList();
+
+				List<Category> categories = await categoryRepository.GetAllCaregories();
+
+
+				List<ItemShopViewModel> itemShopList = new List<ItemShopViewModel>();
+				foreach (var item in items)
+				{
+					ItemShopViewModel itemShop = new ItemShopViewModel();
+					itemShop.Id = item.Id;
+					itemShop.Name = item.Name;
+					itemShop.About = item.About;
+					itemShop.Price = item.Price;
+					itemShop.Discount = item.Discount;
+					itemShop.Category = item.Category;
+					itemShop.IsDelete = item.IsDelete;
+					itemShop.IsHide = item.IsHide;
+					itemShop.Category = categories.FirstOrDefault(i => i.Id == Convert.ToInt32(item.CategoryId));
 					itemShop.SizesDictionary = JsonConvert.DeserializeObject<Dictionary<int, int>>(item.SizesDictionary);
 					itemShop.AdvantagesArray = JsonConvert.DeserializeObject<string[]>(item.AdvantagesArray);
 					itemShop.ItemImagesLinks = JsonConvert.DeserializeObject<string[]>(item.ItemImagesLinks);
